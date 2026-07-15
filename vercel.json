@@ -1,19 +1,19 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
-    }
+    { "src": "/", "dest": "/frontend/index.html" },
+    { "src": "/login", "dest": "/frontend/login.html" },
+    { "src": "/login.html", "dest": "/frontend/login.html" },
+    { "src": "/register", "dest": "/frontend/register.html" },
+    { "src": "/register.html", "dest": "/frontend/register.html" },
+    { "src": "/dashboard", "dest": "/frontend/dashboard.html" },
+    { "src": "/dashboard.html", "dest": "/frontend/dashboard.html" },
+    { "src": "/vote", "dest": "/frontend/vote.html" },
+    { "src": "/vote.html", "dest": "/frontend/vote.html" },
+    { "src": "/results", "dest": "/frontend/results.html" },
+    { "src": "/results.html", "dest": "/frontend/results.html" },
+    { "src": "/profile", "dest": "/frontend/profile.html" },
+    { "src": "/profile.html", "dest": "/frontend/profile.html" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
   ]
 }
