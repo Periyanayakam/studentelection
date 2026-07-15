@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Dashboard - ElectVote</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- Voter Header -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-shield-check-fill"></i> ElectVote
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="elections.html">Elections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="candidates.html">Candidates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="results.html">Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">My Profile</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="theme-toggle-btn btn" id="theme-toggle" aria-label="Toggle Theme">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item dropdown ms-3">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 border rounded-pill px-3 py-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="navbar-user-name">Alex Johnson</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="border-radius: var(--radius-sm);">
+                            <li><a class="dropdown-menu-item dropdown-item py-2" href="profile.html"><i class="bi bi-person-fill me-2"></i> My Profile</a></li>
+                            <li><a class="dropdown-menu-item dropdown-item py-2" href="elections.html"><i class="bi bi-card-checklist me-2"></i> View Ballot</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-menu-item dropdown-item py-2 text-danger" href="#" id="logout-btn"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container pt-5 mt-5 pb-5">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner mt-3">
+            <div class="welcome-banner-content">
+                <p class="mb-1 text-uppercase tracking-wider small fw-semibold" style="letter-spacing: 1px;">Online Student Polling Station</p>
+                <h2 id="dashboard-welcome-msg">Welcome, Alex Johnson!</h2>
+                <p class="lead mb-4 text-white-50" id="dashboard-instructions">
+                    The 2026 Student Council General Election is live. Cast your secure ballot today to influence academic representation.
+                </p>
+                <div id="banner-action-area">
+                    <a href="candidates.html" class="btn btn-light text-primary fw-bold px-4 py-2.5 rounded-pill shadow-sm" id="banner-action-btn">
+                        Go to Polling Booth <i class="bi bi-arrow-right-short ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Side Column -->
+            <div class="col-lg-8">
+                <!-- Active Election Summary -->
+                <div class="card-premium mb-4" id="active-election-widget">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold mb-0 text-primary">Active Election</h4>
+                        <span class="status-badge active"><i class="bi bi-broadcast"></i> Live Polls</span>
+                    </div>
+                    <div id="active-election-details">
+                        <h5 class="fw-bold mb-2">2026 Student Council General Election</h5>
+                        <p class="text-muted small">
+                            Cast your ballot for President, Vice President, and Treasurer. Ballots are encrypted and counted in real-time.
+                        </p>
+                        
+                        <!-- Countdown Widget -->
+                        <div class="bg-light p-3 rounded-3 text-center my-4 countdown-timer-container">
+                            <span class="text-muted small d-block mb-2 font-semibold">Time Remaining to Poll</span>
+                            <div class="countdown-timer d-flex justify-content-center">
+                                <div>
+                                    <div class="countdown-segment" id="countdown-days">00</div>
+                                    <span class="countdown-label">Days</span>
+                                </div>
+                                <div>
+                                    <div class="countdown-segment" id="countdown-hours">00</div>
+                                    <span class="countdown-label">Hrs</span>
+                                </div>
+                                <div>
+                                    <div class="countdown-segment" id="countdown-minutes">00</div>
+                                    <span class="countdown-label">Min</span>
+                                </div>
+                                <div>
+                                    <div class="countdown-segment" id="countdown-seconds">00</div>
+                                    <span class="countdown-label">Sec</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar of votes cast -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-muted small mb-1">
+                                <span>Estimated Turnout</span>
+                                <span id="votes-cast-progress-text">1,847 of 4,280 votes cast (43%)</span>
+                            </div>
+                            <div class="result-progress-container">
+                                <div class="result-progress-bar" id="votes-cast-progress-bar" style="width: 43.1%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a href="candidates.html" class="btn btn-gradient text-white flex-grow-1 py-2.5" id="widget-vote-btn">
+                                <i class="bi bi-box2-heart-fill me-1"></i> Open Ballot Panel
+                            </a>
+                            <a href="results.html" class="btn btn-outline-custom">
+                                <i class="bi bi-bar-chart"></i> View Results
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Elections -->
+                <div class="card-premium mb-4">
+                    <h4 class="fw-bold mb-3 text-primary">Upcoming Elections</h4>
+                    <div id="upcoming-elections-list">
+                        <div class="d-flex align-items-center justify-content-between p-3 border rounded-3 mb-2">
+                            <div>
+                                <h6 class="fw-bold mb-1">2027 Student Council Representative Election</h6>
+                                <span class="text-muted small"><i class="bi bi-calendar3"></i> Starts: Jan 15, 2027</span>
+                            </div>
+                            <span class="status-badge upcoming">Upcoming</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Action Cards Grid -->
+                <div class="row g-3">
+                    <div class="col-6 col-sm-3">
+                        <a href="elections.html" class="quick-action-card">
+                            <i class="bi bi-card-checklist"></i>
+                            <span class="fw-semibold small">All Elections</span>
+                        </a>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <a href="candidates.html" class="quick-action-card">
+                            <i class="bi bi-people-fill"></i>
+                            <span class="fw-semibold small">Candidates</span>
+                        </a>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <a href="results.html" class="quick-action-card">
+                            <i class="bi bi-bar-chart-fill"></i>
+                            <span class="fw-semibold small">Live Results</span>
+                        </a>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <a href="profile.html" class="quick-action-card">
+                            <i class="bi bi-person-fill-gear"></i>
+                            <span class="fw-semibold small">Edit Profile</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Column -->
+            <div class="col-lg-4">
+                <!-- Profile Widget -->
+                <div class="profile-card-widget text-center mb-4">
+
+                    <h5 class="fw-bold mb-1" id="widget-name">Alex Johnson</h5>
+                    <p class="text-muted small mb-2" id="widget-email">alex.johnson@university.edu</p>
+                    <span class="badge bg-primary-light text-primary px-3 py-1.5 rounded-pill small" id="widget-voterid">Voter ID: VOT-2026-08</span>
+                    <hr>
+                    <div class="row text-start g-2 small">
+                        <div class="col-6 text-muted">Approval Status:</div>
+                        <div class="col-6 text-end fw-semibold text-success"><i class="bi bi-patch-check-fill"></i> Approved</div>
+                        <div class="col-6 text-muted">Mobile Registry:</div>
+                        <div class="col-6 text-end fw-semibold" id="widget-mobile">9876543210</div>
+                    </div>
+                </div>
+
+                <!-- Notifications Widget -->
+                <div class="card-premium">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-bell-fill text-warning"></i> Notifications</h5>
+                    <div class="list-group list-group-flush" id="dashboard-notifications-list">
+                        <div class="list-group-item px-0 py-2 border-0 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="small text-primary">Polls Open!</strong>
+                                <small class="text-muted font-monospace" style="font-size: 0.75rem;">1hr ago</small>
+                            </div>
+                            <p class="text-muted small mb-0">Cast your vote in the Student Council Election before Nov 22nd.</p>
+                        </div>
+                        <div class="list-group-item px-0 py-2 border-0 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="small text-primary">New Manifesto</strong>
+                                <small class="text-muted font-monospace" style="font-size: 0.75rem;">2hrs ago</small>
+                            </div>
+                            <p class="text-muted small mb-0">Jordan Williams updated the PSA presidential campaign manifesto.</p>
+                        </div>
+                        <div class="list-group-item px-0 py-2 border-0">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="small text-primary">Voter Registry</strong>
+                                <small class="text-muted font-monospace" style="font-size: 0.75rem;">1d ago</small>
+                            </div>
+                            <p class="text-muted small mb-0">Your registry application has been approved by the board.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Update user state dynamic binding
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = checkVoterAuth(); // Redirect to login if user object missing
+            
+            // Navbar elements
+            document.getElementById('navbar-user-name').textContent = user.name;
+            const navAvatar = document.getElementById('nav-avatar');
+            if (navAvatar && user.avatar) navAvatar.src = user.avatar;
+
+            // Widget elements
+            document.getElementById('widget-name').textContent = user.name;
+            document.getElementById('widget-email').textContent = user.email;
+            document.getElementById('widget-mobile').textContent = user.mobile;
+            document.getElementById('widget-voterid').textContent = 'Voter ID: ' + user.voterId;
+            const widgetAvatar = document.getElementById('widget-avatar');
+            if (widgetAvatar && user.avatar) widgetAvatar.src = user.avatar;
+
+            // Welcome banner elements
+            document.getElementById('dashboard-welcome-msg').textContent = 'Welcome back, ' + user.name + '! 👋';
+
+            // Active election details
+            const activeElection = db.getElections().find(e => e.status === 'active');
+            if (activeElection) {
+                const percentage = Math.round((activeElection.votesCast / activeElection.totalVoters) * 100);
+                document.getElementById('votes-cast-progress-text').textContent = 
+                    `${activeElection.votesCast.toLocaleString()} of ${activeElection.totalVoters.toLocaleString()} votes cast (${percentage}%)`;
+                document.getElementById('votes-cast-progress-bar').style.width = `${percentage}%`;
+            }
+
+            // Adjust buttons if user already voted
+            if (user.hasVoted) {
+                document.getElementById('dashboard-instructions').innerHTML = 
+                    '<i class="bi bi-patch-check-fill text-warning"></i> Thank you! Your secure ballot has been logged and counted. You can track live turnout below.';
+                document.getElementById('banner-action-area').innerHTML = 
+                    '<a href="results.html" class="btn btn-light text-primary fw-bold px-4 py-2.5 rounded-pill shadow-sm"><i class="bi bi-bar-chart-fill me-1"></i> Track Live Results</a>';
+                
+                // Adjust active election widget buttons
+                const voteBtn = document.getElementById('widget-vote-btn');
+                if (voteBtn) {
+                    voteBtn.className = 'btn btn-secondary flex-grow-1 disabled';
+                    voteBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Already Voted';
+                    voteBtn.setAttribute('href', '#');
+                }
+            }
+
+            // Logout binder
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logOutVoter();
+            });
+        });
+    </script>
+</body>
+</html>

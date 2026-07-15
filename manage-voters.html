@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Voters - ElectVote Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <a href="admin-dashboard.html" class="brand">
+                    <i class="bi bi-shield-check-fill text-primary"></i> Board Panel
+                </a>
+                <button class="btn btn-sm btn-dark d-lg-none" id="close-sidebar-btn">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="admin-dashboard.html" class="sidebar-link">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manage-elections.html" class="sidebar-link">
+                        <i class="bi bi-card-checklist"></i> Manage Elections
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manage-candidates.html" class="sidebar-link">
+                        <i class="bi bi-people-fill"></i> Manage Candidates
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manage-voters.html" class="sidebar-link active">
+                        <i class="bi bi-patch-check-fill"></i> Manage Voters
+                        <span class="badge bg-danger rounded-pill ms-auto" id="pending-voters-badge">2</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="results-dashboard.html" class="sidebar-link">
+                        <i class="bi bi-bar-chart-fill"></i> Results Panel
+                    </a>
+                </li>
+                <li class="sidebar-item mt-4 pt-3 border-top border-dark-subtle">
+                    <a href="dashboard.html" class="sidebar-link text-white-50">
+                        <i class="bi bi-person-fill"></i> Voter View
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <p class="mb-0 small text-white-50">Logged in as Administrator</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="admin-content-area">
+            <!-- Header bar -->
+            <header class="admin-navbar">
+                <div class="d-flex align-items-center">
+                    <div class="mobile-sidebar-toggle btn btn-light border p-2" id="sidebar-toggle-btn">
+                        <i class="bi bi-list"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 ms-2 text-primary">Manage Voters</h3>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="theme-toggle-btn btn" aria-label="Toggle Theme">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                    <!-- Admin Avatar Dropdown -->
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center gap-2 text-decoration-none text-main border rounded-pill px-3 py-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=30&q=80" alt="Admin Avatar" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover;">
+                            <span class="d-none d-md-inline" id="admin-header-name">Dr. Mitchell</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                            <li><a class="dropdown-item py-2" href="#" id="admin-logout-btn"><i class="bi bi-box-arrow-right me-2 text-danger"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Voters management body -->
+            <main class="admin-body">
+                <div class="card-premium">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
+                        <div class="input-group" style="max-width: 300px;">
+                            <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" class="form-control" id="search-voters-input" placeholder="Search voters by name or ID...">
+                        </div>
+                        <select class="form-select" id="status-voters-filter" style="max-width: 180px;">
+                            <option value="all">All Registrations</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <!-- Bootstrap Table -->
+                    <div class="table-responsive table-responsive-custom">
+                        <table class="table custom-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Student Voter Name</th>
+                                    <th>Voter Card ID</th>
+                                    <th>Email Address</th>
+                                    <th>Mobile Phone</th>
+                                    <th>Registered Date</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="voters-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav class="mt-4 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Showing voter directory entries</span>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAuth();
+
+            // Mobile sidebar toggle
+            const toggleBtn = document.getElementById('sidebar-toggle-btn');
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const closeBtn = document.getElementById('close-sidebar-btn');
+
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            };
+
+            if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // Table rendering and counts sync
+            const renderVotersTable = () => {
+                const list = db.getVoters();
+                const searchQ = document.getElementById('search-voters-input').value.toLowerCase();
+                const statusF = document.getElementById('status-voters-filter').value;
+                const tbody = document.getElementById('voters-table-body');
+                
+                // Sync sidebar badge
+                const pendingCount = list.filter(v => v.status === 'pending').length;
+                const badge = document.getElementById('pending-voters-badge');
+                if (badge) {
+                    badge.textContent = pendingCount;
+                    if (pendingCount === 0) {
+                        badge.classList.add('d-none');
+                    } else {
+                        badge.classList.remove('d-none');
+                    }
+                }
+
+                let html = '';
+                const filtered = list.filter(v => {
+                    const matchesSearch = v.name.toLowerCase().includes(searchQ) || v.voterId.toLowerCase().includes(searchQ);
+                    const matchesFilter = statusF === 'all' || v.status === statusF;
+                    return matchesSearch && matchesFilter;
+                });
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted small">No voter registry applications found.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                filtered.forEach(v => {
+                    let approvalClass = 'pending';
+                    if (v.status === 'approved') approvalClass = 'approved';
+                    if (v.status === 'rejected') approvalClass = 'rejected';
+
+                    let actionsHtml = '';
+                    if (v.status === 'pending') {
+                        actionsHtml = `
+                            <button class="btn btn-sm btn-success approve-btn me-1" data-id="${v.id}"><i class="bi bi-check-lg"></i> Approve</button>
+                            <button class="btn btn-sm btn-outline-danger reject-btn" data-id="${v.id}"><i class="bi bi-x-lg"></i> Reject</button>
+                        `;
+                    } else {
+                        actionsHtml = `
+                            <span class="text-muted small">Checked</span>
+                        `;
+                    }
+
+                    html += `
+                        <tr>
+                            <td class="fw-semibold text-main small">${v.name}</td>
+                            <td class="font-monospace text-muted small">${v.voterId}</td>
+                            <td class="text-muted small">${v.email}</td>
+                            <td class="text-muted small">${v.mobile}</td>
+                            <td class="text-muted small">${v.registeredDate}</td>
+                            <td><span class="badge-approval ${approvalClass}">${v.status}</span></td>
+                            <td class="text-end">${actionsHtml}</td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+
+                // Bind approval click actions
+                document.querySelectorAll('.approve-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-id');
+                        const voters = db.getVoters();
+                        const updated = voters.map(v => {
+                            if (v.id === id) {
+                                return { ...v, status: 'approved' };
+                            }
+                            return v;
+                        });
+                        db.setVoters(updated);
+                        showToast('Student registry application approved!', 'success');
+                        renderVotersTable();
+                    });
+                });
+
+                document.querySelectorAll('.reject-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-id');
+                        const voters = db.getVoters();
+                        const updated = voters.map(v => {
+                            if (v.id === id) {
+                                return { ...v, status: 'rejected' };
+                            }
+                            return v;
+                        });
+                        db.setVoters(updated);
+                        showToast('Student registry application rejected.', 'error');
+                        renderVotersTable();
+                    });
+                });
+            };
+
+            // Bind triggers
+            document.getElementById('search-voters-input').addEventListener('input', renderVotersTable);
+            document.getElementById('status-voters-filter').addEventListener('change', renderVotersTable);
+            renderVotersTable();
+
+            // Admin Logout Binder
+            document.getElementById('admin-logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logOutAdmin();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Candidates - ElectVote</title>
+  <meta name="description" content="Compare candidates side-by-side across skills, manifesto, department, and achievements.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container"></div>
+  </nav>
+
+  <div class="container" style="padding-top:110px;padding-bottom:60px;">
+    <div class="compare-container">
+
+      <div style="margin-bottom:2rem;">
+        <h1><i class="bi bi-layout-split"></i> Smart Candidate Comparison</h1>
+        <p style="color:var(--text-secondary);margin-top:0.5rem;">Select an election and up to 2 candidates to compare side-by-side.</p>
+      </div>
+
+      <!-- Controls -->
+      <div class="card" style="padding:1.5rem;margin-bottom:2rem;">
+        <div class="compare-controls">
+          <div class="form-group" style="flex:1;min-width:200px;margin:0;">
+            <label class="form-label">Election</label>
+            <select id="election-select" class="form-control">
+              <option value="">-- Select an election --</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;min-width:180px;margin:0;">
+            <label class="form-label">Candidate A</label>
+            <select id="cand-a-select" class="form-control" disabled>
+              <option value="">-- Select --</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;min-width:180px;margin:0;">
+            <label class="form-label">Candidate B</label>
+            <select id="cand-b-select" class="form-control" disabled>
+              <option value="">-- Select --</option>
+            </select>
+          </div>
+          <button id="compare-btn" class="btn btn-primary" disabled style="align-self:flex-end;">
+            <i class="bi bi-arrows-angle-expand"></i> Compare
+          </button>
+        </div>
+      </div>
+
+      <!-- Comparison Table -->
+      <div id="compare-result" style="display:none;">
+        <div class="spinner" id="compare-spinner" style="display:none;"></div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table" id="compare-table">
+            <thead>
+              <tr>
+                <th style="min-width:130px;">Attribute</th>
+                <th id="col-a" style="min-width:200px;">Candidate A</th>
+                <th id="col-b" style="min-width:200px;">Candidate B</th>
+              </tr>
+            </thead>
+            <tbody id="compare-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="compare-empty" class="card" style="text-align:center;padding:3rem;">
+        <i class="bi bi-layout-split" style="font-size:3rem;color:var(--text-muted);display:block;margin-bottom:1rem;"></i>
+        <h3 style="color:var(--text-secondary);">Select Two Candidates to Compare</h3>
+        <p style="color:var(--text-muted);margin-top:0.5rem;">Choose an election and two candidates above to see a detailed side-by-side breakdown.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { apiFetch, getToken, showToast, renderNavbar, buildTimeline } from './js/app.js';
+
+    if (!getToken()) window.location.href = 'login.html';
+    renderNavbar();
+
+    const electionSel = document.getElementById('election-select');
+    const candASel    = document.getElementById('cand-a-select');
+    const candBSel    = document.getElementById('cand-b-select');
+    const compareBtn  = document.getElementById('compare-btn');
+    let allCandidates = [];
+
+    // Load elections
+    const elData = await apiFetch('/elections');
+    if (elData?.success) {
+      elData.elections.forEach(el => {
+        const opt = document.createElement('option');
+        opt.value = el.id;
+        opt.textContent = `${el.title}${el.is_sandbox ? ' [Sandbox]' : ''}`;
+        electionSel.appendChild(opt);
+      });
+    }
+
+    electionSel.addEventListener('change', async () => {
+      const eid = electionSel.value;
+      candASel.innerHTML = '<option value="">-- Select --</option>';
+      candBSel.innerHTML = '<option value="">-- Select --</option>';
+      candASel.disabled = true;
+      candBSel.disabled = true;
+      compareBtn.disabled = true;
+      document.getElementById('compare-result').style.display = 'none';
+      document.getElementById('compare-empty').style.display = 'block';
+      if (!eid) return;
+
+      const candData = await apiFetch(`/candidates?election_id=${eid}`);
+      if (candData?.success) {
+        allCandidates = candData.candidates;
+        allCandidates.forEach(c => {
+          [candASel, candBSel].forEach(sel => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `${c.name} (${c.party})`;
+            sel.appendChild(opt);
+          });
+        });
+        candASel.disabled = false;
+        candBSel.disabled = false;
+      }
+    });
+
+    const checkReady = () => {
+      const aVal = candASel.value;
+      const bVal = candBSel.value;
+      compareBtn.disabled = !(aVal && bVal && aVal !== bVal);
+    };
+    candASel.addEventListener('change', checkReady);
+    candBSel.addEventListener('change', checkReady);
+
+    compareBtn.addEventListener('click', () => {
+      const aId = parseInt(candASel.value);
+      const bId = parseInt(candBSel.value);
+      const candA = allCandidates.find(c => c.id === aId);
+      const candB = allCandidates.find(c => c.id === bId);
+      if (!candA || !candB) return;
+
+      document.getElementById('compare-empty').style.display = 'none';
+      document.getElementById('compare-result').style.display = 'block';
+
+      // Header avatars
+      const avatarHtml = (c) => c.photo
+        ? `<img src="${c.photo}" class="compare-avatar" alt="${c.name}">`
+        : `<div class="compare-avatar" style="background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.8rem;"><i class="bi bi-person-fill"></i></div>`;
+
+      document.getElementById('col-a').innerHTML = `${avatarHtml(candA)}<strong>${candA.name}</strong>`;
+      document.getElementById('col-b').innerHTML = `${avatarHtml(candB)}<strong>${candB.name}</strong>`;
+
+      const achievements = (cand) => {
+        const badges = Array.isArray(cand.achievements) ? cand.achievements : [];
+        if (!badges.length) return '<span style="color:var(--text-muted);">None listed</span>';
+        return badges.map(icon => `<span class="badge-chip"><i class="bi ${icon}"></i></span>`).join(' ');
+      };
+
+      const manifesto = (cand) => cand.manifesto
+        ? `<p style="font-size:0.88rem;color:var(--text-secondary);text-align:left;line-height:1.6;">${cand.manifesto.substring(0, 200)}${cand.manifesto.length > 200 ? '...' : ''}</p>`
+        : '<span style="color:var(--text-muted);">Not provided</span>';
+
+      const rows = [
+        ['Party / Affiliation', `<strong>${candA.party}</strong>`, `<strong>${candB.party}</strong>`],
+        ['Department', candA.department || '<span style="color:var(--text-muted)">—</span>', candB.department || '<span style="color:var(--text-muted)">—</span>'],
+        ['Year', candA.year || '<span style="color:var(--text-muted)">—</span>', candB.year || '<span style="color:var(--text-muted)">—</span>'],
+        ['Election', candA.election_title || '—', candB.election_title || '—'],
+        ['Achievements', achievements(candA), achievements(candB)],
+        ['Manifesto Preview', manifesto(candA), manifesto(candB)],
+      ];
+
+      const tbody = document.getElementById('compare-tbody');
+      tbody.innerHTML = rows.map(([label, a, b]) => `
+        <tr>
+          <td>${label}</td>
+          <td>${a}</td>
+          <td>${b}</td>
+        </tr>
+      `).join('');
+
+      // Scroll into view
+      document.getElementById('compare-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
+</body>
+</html>

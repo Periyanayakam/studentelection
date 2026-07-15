@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Login - ElectVote</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="d-flex align-items-center justify-content-center min-vh-100" style="background: radial-gradient(circle at 50% 50%, rgba(13, 110, 253, 0.05) 0%, var(--bg-main) 100%);">
+
+    <!-- Theme Switcher Top Corner -->
+    <div class="position-fixed top-0 end-0 p-3">
+        <button class="theme-toggle-btn btn shadow-sm" aria-label="Toggle Theme">
+            <i class="bi bi-moon-fill"></i>
+        </button>
+    </div>
+
+    <!-- Login Container -->
+    <div class="container animate-fade-in" style="max-width: 450px;">
+        <div class="text-center mb-4">
+            <a href="index.html" class="text-decoration-none">
+                <h1 class="text-primary fw-black"><i class="bi bi-shield-check-fill"></i> ElectVote</h1>
+            </a>
+            <p class="text-muted">Sign in to cast your secure student ballot</p>
+        </div>
+
+        <div class="card-premium p-4">
+            <!-- Alert Demo Credentials -->
+            <div class="alert alert-info border-0 shadow-sm d-flex align-items-start mb-4" style="background-color: var(--primary-light); color: var(--primary);">
+                <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                <div>
+                    <strong class="d-block small">Demo Credentials:</strong>
+                    <span class="small">Email: <code>alex.johnson@university.edu</code> / Password: <code>any</code></span>
+                </div>
+            </div>
+
+            <form class="needs-validation" novalidate id="login-form">
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="login-email" class="form-label font-semibold">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope-fill text-muted"></i></span>
+                        <input type="email" class="form-control border-start-0 ps-0" id="login-email" placeholder="alex.johnson@university.edu" required>
+                        <div class="invalid-feedback">Please enter your registered university email.</div>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <label for="login-password" class="form-label font-semibold mb-0">Password</label>
+                        <a href="#" id="forgot-password-link" class="text-primary text-decoration-none small">Forgot Password?</a>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock-fill text-muted"></i></span>
+                        <input type="password" class="form-control border-start-0 border-end-0 ps-0" id="login-password" placeholder="••••••••" required>
+                        <button type="button" class="btn btn-light border border-start-0 password-toggle-btn" data-target="login-password">
+                            <i class="bi bi-eye-fill text-muted"></i>
+                        </button>
+                        <div class="invalid-feedback">Please enter your password.</div>
+                    </div>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember-me">
+                    <label class="form-check-label text-muted small" for="remember-me">Remember Me</label>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="btn btn-gradient w-100 text-white py-3 shadow mb-3" id="login-btn">
+                    Login <i class="bi bi-box-arrow-in-right ms-1"></i>
+                </button>
+
+                <!-- Navigation between logins -->
+                <div class="text-center mb-3">
+                    <a href="admin-login.html" class="text-muted small text-decoration-none hover-primary">
+                        <i class="bi bi-shield-lock"></i> Are you an Administrator? Login here
+                    </a>
+                </div>
+
+                <!-- Register Route -->
+                <div class="text-center pt-2 border-top">
+                    <p class="text-muted small mb-0">Don't have an account? <a href="register.html" class="text-primary fw-semibold">Register here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            const form = e.target;
+            if (form.checkValidity()) {
+                e.preventDefault();
+                
+                const emailVal = document.getElementById('login-email').value;
+                const btn = document.getElementById('login-btn');
+                
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Authenticating...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    // Update current user values if they changed
+                    const user = db.getCurrentUser();
+                    user.email = emailVal;
+                    db.setCurrentUser(user);
+
+                    showToast('Welcome back, ' + user.name + '!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 800);
+                }, 1200);
+            }
+        });
+
+        document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('A password reset link has been dispatched to your email address.', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - ElectVote</title>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Rendered dynamically by app.js -->
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 110px; padding-bottom: 60px;">
+    <h1 style="margin-bottom: 2rem;"><i class="bi bi-person-circle"></i> Profile Settings</h1>
+    
+    <div class="profile-grid">
+      <!-- Profile Info Summary Card -->
+      <div class="card profile-avatar-card">
+        <div class="profile-avatar-large" id="profile-avatar-placeholder">U</div>
+        <h3 id="profile-card-name">User Name</h3>
+        <p id="profile-card-role" class="badge badge-primary" style="margin-top: 0.5rem; text-transform: uppercase;">Role</p>
+        <p id="profile-card-email" style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">user@example.com</p>
+      </div>
+
+      <!-- Settings Forms -->
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <!-- Edit Profile Form -->
+        <div class="card">
+          <h3 style="margin-bottom: 1.5rem;"><i class="bi bi-pencil-square"></i> Account Details</h3>
+          <form id="profile-form">
+            <div class="form-group">
+              <label for="fullname" class="form-label">Full Name</label>
+              <input type="text" id="fullname" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address (Cannot be changed)</label>
+              <input type="email" id="email" class="form-control" disabled>
+            </div>
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" id="phone" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes <i class="bi bi-save"></i></button>
+          </form>
+        </div>
+
+        <!-- Change Password Form -->
+        <div class="card">
+          <h3 style="margin-bottom: 1.5rem;"><i class="bi bi-shield-lock"></i> Change Password</h3>
+          <form id="password-form">
+            <div class="form-group">
+              <label for="current-password" class="form-label">Current Password</label>
+              <input type="password" id="current-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div class="form-group">
+              <label for="new-password" class="form-label">New Password</label>
+              <input type="password" id="new-password" class="form-control" placeholder="••••••••" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label for="confirm-new-password" class="form-label">Confirm New Password</label>
+              <input type="password" id="confirm-new-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-secondary">Update Password <i class="bi bi-key-fill"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { apiFetch, getToken, getUser, setUser, showToast, renderNavbar } from './js/app.js';
+
+    // Verify token exists on page load
+    if (!getToken()) {
+      window.location.href = 'login.html';
+    }
+
+    // Initialize layout
+    renderNavbar();
+
+    // Fetch user details
+    const loadProfile = async () => {
+      try {
+        const data = await apiFetch('/profile');
+        if (data && data.success) {
+          const user = data.user;
+          document.getElementById('fullname').value = user.fullname;
+          document.getElementById('email').value = user.email;
+          document.getElementById('phone').value = user.phone || '';
+          
+          document.getElementById('profile-card-name').textContent = user.fullname;
+          document.getElementById('profile-card-email').textContent = user.email;
+          document.getElementById('profile-card-role').textContent = user.role;
+          
+          // Initial avatar letter
+          document.getElementById('profile-avatar-placeholder').textContent = user.fullname.charAt(0).toUpperCase();
+        }
+      } catch (err) {
+        showToast('Failed to load profile details', 'error');
+      }
+    };
+
+    loadProfile();
+
+    // Handle profile update submit
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const fullname = document.getElementById('fullname').value;
+      const phone = document.getElementById('phone').value;
+
+      try {
+        const data = await apiFetch('/profile', {
+          method: 'PUT',
+          body: JSON.stringify({ fullname, phone })
+        });
+
+        if (data && data.success) {
+          showToast(data.message, 'success');
+          // Update cached user details
+          setUser(data.user);
+          loadProfile();
+        } else {
+          showToast(data?.message || 'Update failed', 'error');
+        }
+      } catch (err) {
+        showToast('An error occurred updating profile', 'error');
+      }
+    });
+
+    // Handle password update submit
+    document.getElementById('password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const fullname = document.getElementById('fullname').value;
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+      if (newPassword !== confirmNewPassword) {
+        showToast('New passwords do not match', 'error');
+        return;
+      }
+
+      try {
+        const data = await apiFetch('/profile', {
+          method: 'PUT',
+          body: JSON.stringify({ fullname, phone, password, newPassword })
+        });
+
+        if (data && data.success) {
+          showToast(data.message, 'success');
+          document.getElementById('password-form').reset();
+        } else {
+          showToast(data?.message || 'Password update failed', 'error');
+        }
+      } catch (err) {
+        showToast('An error occurred updating password', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

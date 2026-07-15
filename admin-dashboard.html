@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ElectVote</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <a href="admin-dashboard.html" class="brand">
+                    <i class="bi bi-shield-check-fill text-primary"></i> Board Panel
+                </a>
+                <button class="btn btn-sm btn-dark d-lg-none" id="close-sidebar-btn">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="admin-dashboard.html" class="sidebar-link active">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manage-elections.html" class="sidebar-link">
+                        <i class="bi bi-card-checklist"></i> Manage Elections
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manage-candidates.html" class="sidebar-link">
+                        <i class="bi bi-people-fill"></i> Manage Candidates
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manage-voters.html" class="sidebar-link">
+                        <i class="bi bi-patch-check-fill"></i> Manage Voters
+                        <span class="badge bg-danger rounded-pill ms-auto" id="pending-voters-badge">2</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="results-dashboard.html" class="sidebar-link">
+                        <i class="bi bi-bar-chart-fill"></i> Results Panel
+                    </a>
+                </li>
+                <li class="sidebar-item mt-4 pt-3 border-top border-dark-subtle">
+                    <a href="dashboard.html" class="sidebar-link text-white-50">
+                        <i class="bi bi-person-fill"></i> Voter View
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <p class="mb-0 small text-white-50">Logged in as Administrator</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="admin-content-area">
+            <!-- Header bar -->
+            <header class="admin-navbar">
+                <div class="d-flex align-items-center">
+                    <div class="mobile-sidebar-toggle btn btn-light border p-2" id="sidebar-toggle-btn">
+                        <i class="bi bi-list"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 ms-2 text-primary d-none d-sm-block">Overview</h3>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle-btn btn" aria-label="Toggle Theme">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                    <!-- Admin Avatar Dropdown -->
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center gap-2 text-decoration-none text-main border rounded-pill px-3 py-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=30&q=80" alt="Admin Avatar" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover;">
+                            <span class="d-none d-md-inline" id="admin-header-name">Dr. Mitchell</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                            <li><a class="dropdown-item py-2" href="#" id="admin-logout-btn"><i class="bi bi-box-arrow-right me-2 text-danger"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard body -->
+            <main class="admin-body">
+                <!-- Statistics cards grid -->
+                <div class="row g-4 mb-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="admin-stat-card">
+                            <div>
+                                <span class="text-muted small fw-semibold">Total Elections</span>
+                                <h3 class="fw-bold mt-1 mb-0" id="stat-elections">3</h3>
+                            </div>
+                            <div class="admin-stat-icon stat-blue">
+                                <i class="bi bi-card-checklist"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="admin-stat-card">
+                            <div>
+                                <span class="text-muted small fw-semibold">Total Candidates</span>
+                                <h3 class="fw-bold mt-1 mb-0" id="stat-candidates">4</h3>
+                            </div>
+                            <div class="admin-stat-icon stat-purple">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="admin-stat-card">
+                            <div>
+                                <span class="text-muted small fw-semibold">Verified Voters</span>
+                                <h3 class="fw-bold mt-1 mb-0" id="stat-voters">4,280</h3>
+                            </div>
+                            <div class="admin-stat-icon stat-green">
+                                <i class="bi bi-patch-check-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="admin-stat-card">
+                            <div>
+                                <span class="text-muted small fw-semibold">Total Votes Cast</span>
+                                <h3 class="fw-bold mt-1 mb-0" id="stat-votes">1,847</h3>
+                            </div>
+                            <div class="admin-stat-icon stat-orange">
+                                <i class="bi bi-box2-heart-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts layout -->
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-6">
+                        <div class="card-premium h-100">
+                            <h5 class="fw-bold mb-3 text-primary">Department Turnout Rates (%)</h5>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="admin-turnout-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="card-premium h-100">
+                            <h5 class="fw-bold mb-3 text-primary">Hourly Votes Activity Timeline</h5>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="admin-activity-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities Log -->
+                <div class="card-premium">
+                    <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-list-task"></i> Board Audit Log</h5>
+                    <div class="list-group list-group-flush" id="admin-audit-log">
+                        <div class="list-group-item px-0 py-2.5 border-0 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold text-main small">New student candidate registry approved</span>
+                                <small class="text-muted font-monospace" style="font-size: 0.75rem;">12 mins ago</small>
+                            </div>
+                            <p class="text-muted small mb-0">Approved Carlos Rodriguez application to the Vice President ballot.</p>
+                        </div>
+                        <div class="list-group-item px-0 py-2.5 border-0 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold text-main small">Voter registration request pending review</span>
+                                <small class="text-muted font-monospace" style="font-size: 0.75rem;">24 mins ago</small>
+                            </div>
+                            <p class="text-muted small mb-0">Ethan Hunt submitted Voter Registration Form. Awaiting administrator review.</p>
+                        </div>
+                        <div class="list-group-item px-0 py-2.5 border-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold text-main small">Election parameters updated</span>
+                                <small class="text-muted font-monospace" style="font-size: 0.75rem;">1 hr ago</small>
+                            </div>
+                            <p class="text-muted small mb-0">Extended ending date parameter for 2026 Student Council General Election to Nov 22nd.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAuth(); // Redirect to admin login if not logged in
+
+            // Mobile sidebar toggle triggers
+            const toggleBtn = document.getElementById('sidebar-toggle-btn');
+            const closeBtn = document.getElementById('close-sidebar-btn');
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            };
+
+            if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // Populate admin statistics from mock database
+            const electionsList = db.getElections();
+            const candidatesList = db.getCandidates();
+            const votersList = db.getVoters();
+
+            document.getElementById('stat-elections').textContent = electionsList.length;
+            document.getElementById('stat-candidates').textContent = candidatesList.length;
+            
+            // Total voters is mock fixed number + pending/approved voter list count
+            const totalVoters = 4280 + votersList.filter(v => v.status === 'approved').length;
+            document.getElementById('stat-voters').textContent = totalVoters.toLocaleString();
+
+            // Total votes cast
+            const activeElection = electionsList.find(e => e.id === 'EL001');
+            if (activeElection) {
+                document.getElementById('stat-votes').textContent = activeElection.votesCast.toLocaleString();
+            }
+
+            // Sync pending voters count badge
+            const pendingCount = votersList.filter(v => v.status === 'pending').length;
+            const badge = document.getElementById('pending-voters-badge');
+            if (badge) {
+                badge.textContent = pendingCount;
+                if (pendingCount === 0) badge.classList.add('d-none');
+            }
+
+            // Admin Logout Binder
+            document.getElementById('admin-logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logOutAdmin();
+            });
+        });
+    </script>
+</body>
+</html>

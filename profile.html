@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - ElectVote</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Voter Header -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-shield-check-fill"></i> ElectVote
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="elections.html">Elections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="candidates.html">Candidates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="results.html">Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="profile.html">My Profile</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="theme-toggle-btn btn" id="theme-toggle" aria-label="Toggle Theme">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item dropdown ms-3">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 border rounded-pill px-3 py-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="navbar-user-name">Alex Johnson</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="border-radius: var(--radius-sm);">
+                            <li><a class="dropdown-menu-item dropdown-item py-2" href="profile.html"><i class="bi bi-person-fill me-2"></i> My Profile</a></li>
+                            <li><a class="dropdown-menu-item dropdown-item py-2" href="elections.html"><i class="bi bi-card-checklist me-2"></i> View Ballot</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-menu-item dropdown-item py-2 text-danger" href="#" id="logout-btn"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container pt-5 mt-5 pb-5">
+        <div class="row g-4 mt-2">
+            <!-- Left Profile Card -->
+            <div class="col-lg-4">
+                <div class="profile-card-widget text-center">
+                    <h5 class="fw-bold mb-1" id="widget-name">Alex Johnson</h5>
+                    <p class="text-muted small mb-3" id="widget-email">alex.johnson@university.edu</p>
+                    <span class="badge bg-primary-light text-primary px-3 py-1.5 rounded-pill small" id="widget-voterid">Voter ID: VOT-2026-08</span>
+                    <hr class="my-4">
+                    <div class="row text-start g-2 small">
+                        <div class="col-6 text-muted">Voter Status:</div>
+                        <div class="col-6 text-end fw-semibold text-success"><i class="bi bi-patch-check-fill"></i> Approved</div>
+                        <div class="col-6 text-muted">Registered On:</div>
+                        <div class="col-6 text-end fw-semibold text-muted">2026-07-13</div>
+                        <div class="col-6 text-muted">Academic Year:</div>
+                        <div class="col-6 text-end fw-semibold text-muted">3rd Year</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Profile Panels -->
+            <div class="col-lg-8">
+                <div class="card-premium p-4">
+                    <!-- Nav Tabs -->
+                    <ul class="nav nav-tabs border-bottom mb-4" id="profile-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-panel" type="button" role="tab" aria-controls="details-panel" aria-selected="true">
+                                <i class="bi bi-person-fill"></i> Personal Details
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-panel" type="button" role="tab" aria-controls="password-panel" aria-selected="false">
+                                <i class="bi bi-key-fill"></i> Security Settings
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-panel" type="button" role="tab" aria-controls="history-panel" aria-selected="false">
+                                <i class="bi bi-clock-history"></i> Voting History
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Contents -->
+                    <div class="tab-content" id="profile-tab-content">
+                        <!-- Panel 1: Personal Details -->
+                        <div class="tab-pane fade show active" id="details-panel" role="tabpanel" aria-labelledby="details-tab">
+                            <form class="needs-validation" novalidate id="edit-profile-form">
+                                <div class="mb-3">
+                                    <label for="profile-name" class="form-label font-semibold">Full Name</label>
+                                    <input type="text" class="form-control" id="profile-name" required>
+                                    <div class="invalid-feedback">Full name is required.</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profile-voterid" class="form-label font-semibold">Voter ID</label>
+                                        <input type="text" class="form-control bg-light" id="profile-voterid" readonly disabled>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profile-mobile" class="form-label font-semibold">Mobile Number</label>
+                                        <input type="tel" class="form-control" id="profile-mobile" pattern="[0-9]{10}" required>
+                                        <div class="invalid-feedback">Enter a valid 10-digit number.</div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="profile-email" class="form-label font-semibold">Email Address</label>
+                                    <input type="email" class="form-control" id="profile-email" required>
+                                    <div class="invalid-feedback">Please input a valid email.</div>
+                                </div>
+                                <button type="submit" class="btn btn-gradient text-white px-4">Update Details</button>
+                            </form>
+                        </div>
+
+                        <!-- Panel 2: Change Password -->
+                        <div class="tab-pane fade" id="password-panel" role="tabpanel" aria-labelledby="password-tab">
+                            <form class="needs-validation" novalidate id="change-password-form">
+                                <div class="mb-3">
+                                    <label for="old-password" class="form-label font-semibold">Current Password</label>
+                                    <input type="password" class="form-control" id="old-password" required>
+                                    <div class="invalid-feedback">Please enter your current password.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-password" class="form-label font-semibold">New Password</label>
+                                    <input type="password" class="form-control" id="new-password" required>
+                                    <div class="invalid-feedback">Please input a new password.</div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="confirm-new-password" class="form-label font-semibold">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirm-new-password" required>
+                                    <div class="invalid-feedback">Passwords must match.</div>
+                                </div>
+                                <button type="submit" class="btn btn-gradient text-white px-4">Change Password</button>
+                            </form>
+                        </div>
+
+                        <!-- Panel 3: Voting History -->
+                        <div class="tab-pane fade" id="history-panel" role="tabpanel" aria-labelledby="history-tab">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr class="text-muted small">
+                                            <th>Election Event</th>
+                                            <th>Position</th>
+                                            <th>Voted For</th>
+                                            <th>Cast Date</th>
+                                            <th class="text-end">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="history-table-body">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = checkVoterAuth();
+            
+            // Header Sync
+            document.getElementById('navbar-user-name').textContent = user.name;
+            // Widget elements sync
+            document.getElementById('widget-name').textContent = user.name;
+            document.getElementById('widget-email').textContent = user.email;
+            document.getElementById('widget-mobile').textContent = user.mobile;
+            document.getElementById('widget-voterid').textContent = 'Voter ID: ' + user.voterId;
+
+            // Voting history dynamic load
+            const historyBody = document.getElementById('history-table-body');
+            if (historyBody) {
+                if (!user.history || user.history.length === 0) {
+                    historyBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted small">
+                                <i class="bi bi-clock-history fs-2 d-block mb-2"></i>
+                                No voting history logged. Cast your ballot in an active election.
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    let html = '';
+                    user.history.forEach(item => {
+                        html += `
+                            <tr>
+                                <td class="fw-semibold small">${item.electionTitle}</td>
+                                <td class="text-muted small">${item.position}</td>
+                                <td class="text-muted small">${item.candidateName}</td>
+                                <td class="text-muted small">${item.date}</td>
+                                <td class="text-end"><span class="badge bg-success-subtle text-success border border-success-subtle">Recorded</span></td>
+                            </tr>
+                        `;
+                    });
+                    historyBody.innerHTML = html;
+                }
+            }
+          // Logout Binder
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logOutVoter();
+            });
+        });
+    </script>
+</body>
+</html>

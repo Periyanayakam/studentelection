@@ -1,0 +1,227 @@
+/* Voter Dashboard styling */
+.welcome-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, #0d6efd 50%, #0099ff 100%);
+    border-radius: var(--radius-lg);
+    color: #ffffff;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.15);
+}
+
+.welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 1;
+}
+
+.welcome-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: 20%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 1;
+}
+
+.welcome-banner-content {
+    position: relative;
+    z-index: 2;
+}
+
+.welcome-banner h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+
+/* Dashboard Status Badge */
+.status-badge {
+    padding: 0.35em 0.8em;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.active {
+    background-color: rgba(25, 135, 84, 0.15);
+    color: var(--success);
+}
+.status-badge.upcoming {
+    background-color: rgba(13, 202, 240, 0.15);
+    color: var(--accent);
+}
+.status-badge.completed {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: var(--text-muted);
+}
+
+/* Quick Actions Grid */
+.quick-action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-main);
+    text-decoration: none;
+}
+.quick-action-card:hover {
+    background-color: var(--primary-light);
+    border-color: rgba(var(--primary-rgb), 0.2);
+    transform: scale(1.05);
+}
+.quick-action-card i {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+}
+
+/* Countdown Timer */
+.countdown-timer {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.countdown-segment {
+    background-color: var(--primary-light);
+    color: var(--primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-width: 45px;
+    text-align: center;
+}
+.countdown-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Profile Card Widget */
+.profile-card-widget {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-light);
+}
+
+/* Skeleton Loading Animation */
+.skeleton-loader {
+    animation: skeleton-shimmer 1.5s infinite linear;
+    background: linear-gradient(90deg, var(--border-color) 25%, var(--primary-light) 50%, var(--border-color) 75%);
+    background-size: 200% 100%;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+.skeleton-title {
+    height: 1.5rem;
+    margin-bottom: 0.75rem;
+    width: 60%;
+}
+.skeleton-circle {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+
+/* Password strength bar */
+.password-strength-meter {
+    height: 6px;
+    border-radius: 3px;
+    background-color: var(--border-color);
+    margin-top: 0.5rem;
+    overflow: hidden;
+    transition: var(--transition);
+}
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: var(--transition);
+}
+.strength-weak { background-color: var(--danger); width: 33.33%; }
+.strength-medium { background-color: var(--warning); width: 66.66%; }
+.strength-strong { background-color: var(--success); width: 100%; }
+
+/* Success animation checkmark */
+.success-checkmark {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background-color: rgba(25, 135, 84, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.success-checkmark i {
+    font-size: 3rem;
+    color: var(--success);
+    transform: scale(0);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.2s;
+}
+
+@keyframes popIn {
+    to { transform: scale(1); }
+}
+
+/* Election Result Bar Chart Progress Custom */
+.result-progress-container {
+    background-color: var(--primary-light);
+    border-radius: 50rem;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+}
+.result-progress-bar {
+    height: 100%;
+    border-radius: 50rem;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}

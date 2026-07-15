@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - ElectVote</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="d-flex align-items-center justify-content-center min-vh-100" style="background: radial-gradient(circle at 50% 50%, rgba(111, 66, 193, 0.04) 0%, var(--bg-main) 100%);">
+
+    <!-- Theme Switcher Top Corner -->
+    <div class="position-fixed top-0 end-0 p-3">
+        <button class="theme-toggle-btn btn shadow-sm" aria-label="Toggle Theme">
+            <i class="bi bi-moon-fill"></i>
+        </button>
+    </div>
+
+    <!-- Login Container -->
+    <div class="container animate-fade-in" style="max-width: 450px;">
+        <div class="text-center mb-4">
+            <a href="index.html" class="text-decoration-none">
+                <h1 class="text-primary fw-black"><i class="bi bi-shield-check-fill"></i> ElectVote</h1>
+            </a>
+            <p class="text-muted">Administrator Board Access Portal</p>
+        </div>
+
+        <div class="card-premium p-4" style="border-top: 4px solid var(--primary);">
+            <!-- Alert Demo Credentials -->
+            <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start mb-4" style="background-color: rgba(111, 66, 193, 0.07); color: #6f42c1;">
+                <i class="bi bi-shield-lock-fill me-2 fs-5 text-purple"></i>
+                <div>
+                    <strong class="d-block small">Board Credentials:</strong>
+                    <span class="small">Username: <code>admin</code> / Password: <code>any</code></span>
+                </div>
+            </div>
+
+            <form class="needs-validation" novalidate id="admin-login-form">
+                <!-- Username Field -->
+                <div class="mb-3">
+                    <label for="admin-username" class="form-label font-semibold">Username or Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-fill text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="admin-username" placeholder="admin" required>
+                        <div class="invalid-feedback">Please enter your admin credentials.</div>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-4">
+                    <label for="admin-password" class="form-label font-semibold">Secret Key / Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock-fill text-muted"></i></span>
+                        <input type="password" class="form-control border-start-0 border-end-0 ps-0" id="admin-password" placeholder="••••••••" required>
+                        <button type="button" class="btn btn-light border border-start-0 password-toggle-btn" data-target="admin-password">
+                            <i class="bi bi-eye-fill text-muted"></i>
+                        </button>
+                        <div class="invalid-feedback">Please enter your password.</div>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="btn btn-gradient w-100 text-white py-3 shadow mb-3" id="admin-login-btn">
+                    Authenticate Board Access <i class="bi bi-shield-lock-fill ms-1"></i>
+                </button>
+
+                <!-- Voter Login Redirect -->
+                <div class="text-center pt-2 border-top">
+                    <p class="text-muted small mb-0"><a href="login.html" class="text-primary fw-semibold"><i class="bi bi-arrow-left"></i> Return to Voter Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            const form = e.target;
+            if (form.checkValidity()) {
+                e.preventDefault();
+                
+                const btn = document.getElementById('admin-login-btn');
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Authenticating Secret Key...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    showToast('Admin session authenticated. Welcome back, Dr. Mitchell.', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 800);
+                }, 1200);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - ElectVote</title>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <div class="auth-logo">
+      <a href="index.html">
+        <h1><i class="bi bi-shield-check-fill"></i> ElectVote</h1>
+      </a>
+      <p>Log in to access your secure voting booth or admin panel</p>
+    </div>
+
+    <div class="card auth-card">
+      <form id="login-form">
+        <!-- Role Selection -->
+        <div class="form-group">
+          <label for="role" class="form-label">Sign in as</label>
+          <select id="role" class="form-control">
+            <option value="voter" selected>Voter</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="john@voting.com" required>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <label for="password" class="form-label" style="margin-bottom: 0;">Password</label>
+            <a href="#" id="forgot-password" style="font-size: 0.85rem;">Forgot password?</a>
+          </div>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+          Sign In <i class="bi bi-box-arrow-in-right"></i>
+        </button>
+      </form>
+
+      <div class="auth-links">
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { apiFetch, setToken, setUser, showToast } from './js/app.js';
+
+    // Handle Forgot Password Toast
+    document.getElementById('forgot-password').addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Password recovery instructions sent to your email (Demo: Check console or use password123)', 'warning');
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+
+      try {
+        const data = await apiFetch('/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password, role })
+        });
+
+        if (data && data.success) {
+          setToken(data.token);
+          setUser(data.user);
+          showToast(data.message || 'Login successful!', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 1000);
+        } else {
+          showToast(data?.message || 'Login failed. Verify credentials and role.', 'error');
+        }
+      } catch (err) {
+        showToast('Connection failed. Please verify the backend is running.', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

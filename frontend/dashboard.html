@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ElectVote</title>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Custom Sidebar display on Dashboard */
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Rendered dynamically by app.js -->
+    </div>
+  </nav>
+
+  <!-- Loader -->
+  <div class="spinner" id="dashboard-global-spinner" style="margin-top: 150px;"></div>
+
+  <!-- Voter Dashboard Layout -->
+  <div class="container" id="voter-dashboard" style="display: none; padding-top: 110px; padding-bottom: 60px;">
+    <div class="dashboard-header">
+      <div>
+        <h1 id="voter-welcome">Welcome, Voter!</h1>
+        <p style="color: var(--text-secondary);">Browse active elections and cast your ballot securely.</p>
+      </div>
+      <a href="profile.html" class="btn btn-secondary"><i class="bi bi-person-fill-gear"></i> Edit Profile</a>
+    </div>
+
+    <!-- Voter Info Widgets -->
+    <div class="dashboard-cards" style="margin-bottom: 3rem;">
+      <div class="dashboard-stat-card">
+        <div class="dashboard-stat-icon"><i class="bi bi-calendar-event"></i></div>
+        <div class="dashboard-stat-info">
+          <h5>Elections Status</h5>
+          <h2 id="voter-widget-elections-count">0 Live</h2>
+        </div>
+      </div>
+      <div class="dashboard-stat-card">
+        <div class="dashboard-stat-icon" style="color: var(--success); background-color: var(--success-light);"><i class="bi bi-check-circle"></i></div>
+        <div class="dashboard-stat-info">
+          <h5>Ballots Cast</h5>
+          <h2 id="voter-widget-voted-count">0 Casted</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements Strip -->
+    <div class="card" id="voter-badges-container" style="display:none; margin-bottom: 2rem; padding:0;">
+      <div style="background:var(--primary-light); padding:0.75rem 1.25rem; border-bottom:1px solid rgba(99,102,241,0.2);">
+        <h4 style="color:var(--primary);margin:0;"><i class="bi bi-award-fill"></i> My Achievements</h4>
+      </div>
+      <div class="badges-strip" id="badges-strip-content"></div>
+    </div>
+
+    <!-- Voter Elections Directory & Feed Grid -->
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 2rem;" id="voter-main-grid">
+      
+      <!-- Left Column: Elections -->
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <h2 style="margin:0;"><i class="bi bi-collection-play-fill"></i> Elections Portal</h2>
+          <div class="search-container" style="margin:0; width:auto; flex-direction:row;">
+            <select id="voter-filter" class="form-control" style="width:150px; padding:0.4rem;">
+              <option value="all">All Status</option>
+              <option value="active" selected>Active / Live</option>
+              <option value="upcoming">Upcoming</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="election-grid" id="voter-election-grid" style="grid-template-columns:1fr;">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+
+      <!-- Right Column: Live Feed & Archive -->
+      <div>
+        <!-- Live Feed Widget -->
+        <div class="card" style="margin-bottom:2rem;">
+          <h3 style="margin-bottom:1rem; font-size:1.1rem;"><i class="bi bi-broadcast"></i> Live Activity Feed</h3>
+          <div class="activity-feed" id="voter-feed-container">
+            <p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1rem;">Select an active election to view feed.</p>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="card">
+          <h3 style="margin-bottom:1rem; font-size:1.1rem;"><i class="bi bi-lightning-charge"></i> Quick Links</h3>
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            <a href="compare.html" class="btn btn-secondary" style="justify-content:flex-start;"><i class="bi bi-layout-split"></i> Compare Candidates</a>
+            <a href="manifesto.html" class="btn btn-secondary" style="justify-content:flex-start;"><i class="bi bi-robot"></i> AI Manifesto Summarizer</a>
+            <a href="archive.html" class="btn btn-secondary" style="justify-content:flex-start;"><i class="bi bi-archive-fill"></i> Digital Archive</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Layout -->
+  <div class="dashboard-layout" id="admin-dashboard" style="display: none;">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" data-tab="overview">
+          <a href="#"><i class="bi bi-grid-1x2-fill"></i> Overview</a>
+        </li>
+        <li class="sidebar-item" data-tab="elections">
+          <a href="#"><i class="bi bi-calendar-check-fill"></i> Manage Elections</a>
+        </li>
+        <li class="sidebar-item" data-tab="candidates">
+          <a href="#"><i class="bi bi-people-fill"></i> Manage Candidates</a>
+        </li>
+        <li class="sidebar-item" data-tab="users">
+          <a href="#"><i class="bi bi-person-lines-fill"></i> Registered Voters</a>
+        </li>
+        <li class="sidebar-item" data-tab="results">
+          <a href="#"><i class="bi bi-bar-chart-line-fill"></i> Election Results</a>
+        </li>
+      </ul>
+
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="admin-avatar-char">A</div>
+        <div class="sidebar-user-info">
+          <h4 id="admin-sidebar-name">Admin Name</h4>
+          <p>Administrator</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      
+      <!-- TAB 1: OVERVIEW -->
+      <section id="section-overview" class="dashboard-section active">
+        <div class="dashboard-header">
+          <h1>System Overview</h1>
+          <p style="color: var(--text-secondary);">Realtime system state, statistics and activity logs.</p>
+        </div>
+
+        <div class="dashboard-cards">
+          <div class="dashboard-stat-card">
+            <div class="dashboard-stat-icon"><i class="bi bi-people"></i></div>
+            <div class="dashboard-stat-info">
+              <h5>Total Voters</h5>
+              <h2 id="stat-total-voters">0</h2>
+            </div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="dashboard-stat-icon" style="color: var(--secondary); background-color: var(--primary-light);"><i class="bi bi-calendar-event"></i></div>
+            <div class="dashboard-stat-info">
+              <h5>Elections</h5>
+              <h2 id="stat-total-elections">0</h2>
+            </div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="dashboard-stat-icon" style="color: var(--warning); background-color: var(--warning-light);"><i class="bi bi-person-badge"></i></div>
+            <div class="dashboard-stat-info">
+              <h5>Candidates</h5>
+              <h2 id="stat-total-candidates">0</h2>
+            </div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="dashboard-stat-icon" style="color: var(--success); background-color: var(--success-light);"><i class="bi bi-ballot"></i></div>
+            <div class="dashboard-stat-info">
+              <h5>Votes Cast</h5>
+              <h2 id="stat-total-votes">0</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+          <h3 style="margin-bottom: 1.25rem;"><i class="bi bi-clock-history"></i> Recent Ballots Activity</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Voter</th>
+                  <th>Election</th>
+                  <th>Candidate Chosen</th>
+                  <th>Time Recorded</th>
+                </tr>
+              </thead>
+              <tbody id="recent-votes-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: var(--text-secondary);">No voting activity logs recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: MANAGE ELECTIONS -->
+      <section id="section-elections" class="dashboard-section">
+        <div class="dashboard-header">
+          <h1>Manage Elections</h1>
+          <button class="btn btn-primary" id="open-add-election-modal"><i class="bi bi-plus-lg"></i> Add New Election</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Election Title</th>
+                <th>Timeline</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-elections-tbody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: MANAGE CANDIDATES -->
+      <section id="section-candidates" class="dashboard-section">
+        <div class="dashboard-header">
+          <h1>Manage Candidates</h1>
+          <button class="btn btn-primary" id="open-add-candidate-modal"><i class="bi bi-person-plus-fill"></i> Add Candidate</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Candidate Name</th>
+                <th>Election Association</th>
+                <th>Party Group</th>
+                <th>Symbol</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-candidates-tbody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: REGISTERED USERS -->
+      <section id="section-users" class="dashboard-section">
+        <div class="dashboard-header">
+          <h1>Registered Users</h1>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Database ID</th>
+                <th>Full Name</th>
+                <th>Email Address</th>
+                <th>Mobile Number</th>
+                <th>Account Type</th>
+                <th>Signup Date</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-tbody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 5: RESULTS OVERVIEW -->
+      <section id="section-results" class="dashboard-section">
+        <div class="dashboard-header">
+          <h1>Election Outcome Results</h1>
+        </div>
+        
+        <div class="card" style="margin-bottom: 2rem;">
+          <label for="admin-results-election-select" class="form-label">Choose Election to View Results</label>
+          <select id="admin-results-election-select" class="form-control">
+            <option value="">-- Choose Election --</option>
+          </select>
+        </div>
+
+        <div id="admin-results-display" style="display: none;">
+          <!-- Embeds dynamic result data similar to results.html inside a dashboard component -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ELECTION MODALS (Add/Edit) -->
+  <div class="modal" id="election-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="election-modal-title">Create Election</h3>
+        <button class="modal-close" id="election-modal-close-x">&times;</button>
+      </div>
+      <form id="election-form">
+        <input type="hidden" id="election-edit-id">
+        <div class="form-group">
+          <label for="election-title-input" class="form-label">Election Title</label>
+          <input type="text" id="election-title-input" class="form-control" required placeholder="e.g. Student Council General Election 2026">
+        </div>
+        <div class="form-group">
+          <label for="election-desc-input" class="form-label">Description</label>
+          <textarea id="election-desc-input" class="form-control" rows="3" placeholder="Enter details about this election..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="election-start-input" class="form-label">Start Date & Time</label>
+          <input type="datetime-local" id="election-start-input" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="election-end-input" class="form-label">End Date & Time</label>
+          <input type="datetime-local" id="election-end-input" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="election-status-input" class="form-label">Initial Status</label>
+          <select id="election-status-input" class="form-control">
+            <option value="upcoming" selected>Upcoming</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="election-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="election-modal-submit-btn">Save Election</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CANDIDATE MODALS (Add/Edit) -->
+  <div class="modal" id="candidate-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="candidate-modal-title">Register Candidate</h3>
+        <button class="modal-close" id="candidate-modal-close-x">&times;</button>
+      </div>
+      <form id="candidate-form">
+        <input type="hidden" id="candidate-edit-id">
+        <div class="form-group">
+          <label for="candidate-election-select" class="form-label">Target Election</label>
+          <select id="candidate-election-select" class="form-control" required>
+            <!-- Loaded dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="candidate-name-input" class="form-label">Candidate Name</label>
+          <input type="text" id="candidate-name-input" class="form-control" required placeholder="e.g. Jordan Williams">
+        </div>
+        <div class="form-group">
+          <label for="candidate-party-input" class="form-label">Party / Coalition</label>
+          <input type="text" id="candidate-party-input" class="form-control" required placeholder="e.g. Student Alliance Coalition">
+        </div>
+        <div class="form-group">
+          <label for="candidate-symbol-input" class="form-label">Symbol Icon Class (Bootstrap Icons)</label>
+          <input type="text" id="candidate-symbol-input" class="form-control" placeholder="e.g. bi-rocket-takeoff-fill, bi-people-fill">
+        </div>
+        <div class="form-group">
+          <label for="candidate-photo-input" class="form-label">Candidate Photo URL</label>
+          <input type="url" id="candidate-photo-input" class="form-control" placeholder="e.g. https://images.unsplash.com/photo-...">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="candidate-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="candidate-modal-submit-btn">Save Candidate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script type="module">
+    import { apiFetch, getToken, getUser, showToast, renderNavbar, buildCountdown, timeAgo } from './js/app.js';
+
+    if (!getToken()) window.location.href = 'login.html';
+    renderNavbar();
+    const user = getUser();
+
+    // 1. Load Voter Badges
+    const loadBadges = async () => {
+      try {
+        const badgeRes = await apiFetch('/my-badges');
+        if (badgeRes?.success && badgeRes.badges.length > 0) {
+          const container = document.getElementById('voter-badges-container');
+          const strip = document.getElementById('badges-strip-content');
+          strip.innerHTML = badgeRes.badges.map(b => `
+            <div class="voter-badge-card" title="${b.description}">
+              <div class="voter-badge-icon" style="background:${b.color}20; color:${b.color};">
+                <i class="bi ${b.icon}"></i>
+              </div>
+              <div>
+                <strong style="display:block;font-size:0.9rem;">${b.label}</strong>
+                <span style="font-size:0.7rem;color:var(--text-muted);">${b.election_title || 'Global'}</span>
+              </div>
+            </div>
+          `).join('');
+          container.style.display = 'block';
+        }
+      } catch (err) { console.error('Badge load error'); }
+    };
+
+    // 2. Load Live Feed for an election
+    const loadFeed = async (electionId) => {
+      try {
+        const feedRes = await apiFetch(`/feed?election_id=${electionId}`);
+        const c = document.getElementById('voter-feed-container');
+        if (feedRes?.success && feedRes.feed.length > 0) {
+          c.innerHTML = feedRes.feed.map(f => `
+            <div class="feed-item">
+              <div class="feed-dot ${f.event_type}"></div>
+              <div class="feed-message">${f.message}</div>
+              <div class="feed-time">${timeAgo(f.created_at)}</div>
+            </div>
+          `).join('');
+        } else {
+          c.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1rem;">No recent activity.</p>';
+        }
+      } catch (err) { console.error('Feed load error'); }
+    };
+
+    // Global Loader removal
+    const hideGlobalSpinner = () => {
+      document.getElementById('dashboard-global-spinner').style.display = 'none';
+    };
+
+    // --- UI PIVOT: Admin vs. Voter ---
+    if (user.role === 'admin') {
+      document.getElementById('admin-dashboard').style.display = 'flex';
+      document.getElementById('admin-sidebar-name').textContent = user.fullname;
+      document.getElementById('admin-avatar-char').textContent = user.fullname.charAt(0).toUpperCase();
+      hideGlobalSpinner();
+      initAdminDashboard();
+    } else {
+      document.getElementById('voter-dashboard').style.display = 'block';
+      document.getElementById('voter-welcome').textContent = `Welcome back, ${user.fullname.split(' ')[0]}!`;
+      hideGlobalSpinner();
+      
+      // CSS Grid responsiveness injection
+      const s = document.createElement('style');
+      s.innerHTML = `@media(max-width:900px){ #voter-main-grid{grid-template-columns:1fr!important;} }`;
+      document.head.appendChild(s);
+
+      loadBadges();
+      initVoterDashboard();
+    }
+
+    // --- VOTER PORTAL LOGIC ---
+    function initVoterDashboard() {
+      const filterSelect = document.getElementById('voter-filter');
+      const grid = document.getElementById('voter-election-grid');
+      let electionsList = [];
+      let votedElectionIds = new Set(); // tracks which elections this voter already voted in
+
+      const loadVoterElections = async () => {
+        try {
+          // Load elections and results summary simultaneously
+          const [elRes, resultsRes] = await Promise.all([
+            apiFetch('/elections'),
+            apiFetch('/results')
+          ]);
+
+          hideGlobalSpinner();
+
+          if (elRes && elRes.success) {
+            electionsList = elRes.elections;
+
+            // Build set of election IDs this voter already voted in.
+            // The /results endpoint returns elections with total_votes.
+            // We check if any vote exists for each election by trying
+            // a per-election results call — but to avoid N calls, we
+            // use the existing /votes check through the vote endpoint returning 400.
+            // Instead, we add a dedicated hasVoted field via a new endpoint below.
+            if (resultsRes && resultsRes.success && Array.isArray(resultsRes.elections)) {
+              // We'll check voted status on each active election
+              const activeIds = electionsList.filter(e => e.status === 'active').map(e => e.id);
+              await Promise.all(activeIds.map(async (eid) => {
+                // Try a dummy vote to check — NOT ideal. Instead use dedicated endpoint.
+                const checkRes = await apiFetch(`/results?election_id=${eid}`);
+                // We'll determine this in filterAndRender via per-card check
+              }));
+            }
+
+            // Load voted elections from dedicated endpoint
+            const myVotesRes = await apiFetch('/my-votes');
+            if (myVotesRes && myVotesRes.success) {
+              votedElectionIds = new Set(myVotesRes.voted_election_ids);
+            }
+
+            filterAndRender();
+          }
+        } catch (err) {
+          hideGlobalSpinner();
+          console.error('Voter dashboard load error:', err);
+        }
+      };
+
+      const filterAndRender = () => {
+        const filter = filterSelect.value;
+
+        const filtered = electionsList.filter(e => {
+          return (filter === 'all') || (e.status === filter);
+        });
+
+        grid.innerHTML = '';
+        if (filtered.length === 0) {
+          grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-secondary);"><i class="bi bi-inbox" style="font-size:3rem;display:block;margin-bottom:1rem;"></i><p>No elections match your filter.</p></div>';
+          return;
+        }
+
+        let firstActiveFeedId = null;
+
+        filtered.forEach(el => {
+          const card = document.createElement('div');
+          card.className = 'card election-card';
+
+          let statusText = el.status.charAt(0).toUpperCase() + el.status.slice(1);
+          let badgeClass = 'badge-secondary';
+          if (el.status === 'active') badgeClass = 'badge-success';
+          else if (el.status === 'completed') badgeClass = 'badge-primary';
+
+          const sandboxBadge = el.is_sandbox
+            ? `<div class="sandbox-banner" style="margin-bottom:1rem;padding:0.4rem 0.75rem;"><i class="bi bi-cone-striped"></i> Sandbox Mode — Practice Only</div>`
+            : '';
+
+          const alreadyVoted = votedElectionIds.has(el.id);
+
+          let cardAction = '';
+          let timerHtml = '';
+
+          if (el.status === 'active') {
+            if (alreadyVoted) {
+              // Show "already voted" UI
+              cardAction = `
+                <div style="background:var(--success-light);border:1px solid rgba(16,185,129,0.3);border-radius:var(--radius-md);padding:1rem;text-align:center;">
+                  <i class="bi bi-patch-check-fill" style="font-size:1.5rem;color:var(--success);display:block;margin-bottom:0.4rem;"></i>
+                  <strong style="color:var(--success);">You have already voted!</strong>
+                  <p style="font-size:0.82rem;color:var(--text-secondary);margin:0.4rem 0 0.75rem;">Your ballot has been securely recorded.</p>
+                  <a href="results.html?election_id=${el.id}" class="btn btn-secondary btn-sm" style="width:100%;">
+                    <i class="bi bi-bar-chart-fill"></i> View Live Results
+                  </a>
+                </div>`;
+            } else {
+              // Show "Cast Your Vote" button
+              cardAction = `
+                <a href="vote.html?election_id=${el.id}" class="btn btn-primary" style="width:100%;padding:0.85rem;font-size:1rem;">
+                  <i class="bi bi-box2-heart-fill"></i> Cast Your Vote
+                </a>`;
+              if (!firstActiveFeedId) firstActiveFeedId = el.id;
+            }
+            timerHtml = `
+              <div id="timer-inject-${el.id}" style="margin-bottom:1rem;background:var(--bg-tertiary);padding:0.65rem 0.85rem;border-radius:var(--radius-md);">
+                <span style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;display:block;margin-bottom:0.3rem;">Time remaining:</span>
+              </div>`;
+          } else if (el.status === 'upcoming') {
+            cardAction = `<button class="btn btn-secondary" style="width:100%;" disabled><i class="bi bi-clock-history"></i> Election Opens Soon</button>`;
+            timerHtml = `
+              <div id="timer-inject-${el.id}" style="margin-bottom:1rem;background:var(--bg-tertiary);padding:0.65rem 0.85rem;border-radius:var(--radius-md);">
+                <span style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;display:block;margin-bottom:0.3rem;">Opens in:</span>
+              </div>`;
+          } else {
+            cardAction = `<a href="results.html?election_id=${el.id}" class="btn btn-secondary" style="width:100%;"><i class="bi bi-bar-chart-fill"></i> View Final Results</a>`;
+          }
+
+          card.innerHTML = `
+            ${sandboxBadge}
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+              <h3 style="margin:0;font-size:1.1rem;">${el.title}</h3>
+              <span class="badge ${badgeClass}">${statusText}</span>
+            </div>
+            <p style="color:var(--text-secondary);font-size:0.88rem;margin:0.5rem 0 1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+              ${el.description || 'No description provided.'}
+            </p>
+            ${timerHtml}
+            ${cardAction}
+          `;
+
+          grid.appendChild(card);
+
+          // Inject countdown timer
+          const timerEl = document.getElementById(`timer-inject-${el.id}`);
+          if (timerEl && (el.status === 'active' || el.status === 'upcoming')) {
+            const target = el.status === 'active' ? el.end_date : el.start_date;
+            timerEl.appendChild(buildCountdown(target));
+          }
+        });
+
+        // Load live feed for first active election without already voted
+        if (firstActiveFeedId) loadFeed(firstActiveFeedId);
+
+        // Update widget stats
+        const activeCount = electionsList.filter(e => e.status === 'active').length;
+        const votedEl = document.getElementById('voter-widget-elections-count');
+        if (votedEl) votedEl.textContent = `${activeCount} Live`;
+        const castedEl = document.getElementById('voter-widget-voted-count');
+        if (castedEl) castedEl.textContent = `${votedElectionIds.size} Casted`;
+      };
+
+      filterSelect.addEventListener('change', filterAndRender);
+
+      // Check if URL parameters have success messages
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('voted') === 'true') {
+        showToast('Vote confirmed successfully! Your ballot has been recorded.', 'success');
+        // Clean URL parameter
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      loadVoterElections();
+    }
+
+    // --- ADMINISTRATOR MANAGEMENT PORTAL LOGIC ---
+    function initAdminDashboard() {
+      let electionsList = [];
+      let candidatesList = [];
+
+      // Helper to fill target select input with election options
+      const loadElectionDropdownOptions = async (selectId, selectedValue = '') => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">-- Choose Election --</option>';
+
+        if (electionsList.length === 0) {
+          const res = await apiFetch('/elections');
+          if (res && res.success) electionsList = res.elections;
+        }
+
+        electionsList.forEach(e => {
+          const opt = document.createElement('option');
+          opt.value = e.id;
+          opt.textContent = e.title;
+          if (e.id == selectedValue) opt.selected = true;
+          select.appendChild(opt);
+        });
+      };
+
+      // --- Refresh Overview stats ---
+      const refreshAdminStats = async () => {
+        const data = await apiFetch('/admin/dashboard');
+        if (data && data.success) {
+          document.getElementById('stat-total-voters').textContent = data.stats.totalVoters;
+          document.getElementById('stat-total-elections').textContent = data.stats.totalElections;
+          document.getElementById('stat-total-candidates').textContent = data.stats.totalCandidates;
+          document.getElementById('stat-total-votes').textContent = data.stats.totalVotes;
+
+          const recentVotesTbody = document.getElementById('recent-votes-tbody');
+          recentVotesTbody.innerHTML = '';
+          if (!data.recentVotes || data.recentVotes.length === 0) {
+            recentVotesTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);">No recent ballot records casted.</td></tr>';
+            return;
+          }
+          data.recentVotes.forEach(log => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td><strong>${log.voter_name}</strong></td>
+              <td>${log.election_title}</td>
+              <td><span class="badge badge-primary">${log.candidate_name}</span></td>
+              <td><small>${new Date(log.voted_at).toLocaleString()}</small></td>
+            `;
+            recentVotesTbody.appendChild(row);
+          });
+        } else {
+          showToast(data?.message || 'Failed to load dashboard stats', 'error');
+        }
+      };
+
+      // --- Load Manage Elections list ---
+      const loadAdminElections = async () => {
+        const data = await apiFetch('/elections');
+        if (data && data.success) {
+          electionsList = data.elections;
+          const tbody = document.getElementById('admin-elections-tbody');
+          tbody.innerHTML = '';
+          if (electionsList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);">No elections created yet.</td></tr>';
+            return;
+          }
+          electionsList.forEach(e => {
+            const row = document.createElement('tr');
+            const startD = new Date(e.start_date).toLocaleString();
+            const endD = new Date(e.end_date).toLocaleString();
+            let badge = `<span class="badge badge-warning">${e.status}</span>`;
+            if (e.status === 'active') badge = `<span class="badge badge-success">Active</span>`;
+            else if (e.status === 'completed') badge = `<span class="badge badge-primary">Completed</span>`;
+
+            row.innerHTML = `
+              <td>
+                <strong>${e.title}</strong>
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">${e.description || 'No description'}</div>
+              </td>
+              <td>
+                <div style="font-size:0.85rem;"><i class="bi bi-play-circle"></i> ${startD}</div>
+                <div style="font-size:0.85rem;margin-top:0.2rem;"><i class="bi bi-stop-circle"></i> ${endD}</div>
+              </td>
+              <td>${badge}</td>
+              <td>
+                <div style="display:flex;gap:0.5rem;">
+                  <button class="btn btn-secondary btn-sm edit-el-btn" data-id="${e.id}"><i class="bi bi-pencil-fill"></i></button>
+                  <button class="btn btn-danger btn-sm delete-el-btn" data-id="${e.id}"><i class="bi bi-trash-fill"></i></button>
+                </div>
+              </td>
+            `;
+
+            row.querySelector('.edit-el-btn').onclick = () => {
+              document.getElementById('election-edit-id').value = e.id;
+              document.getElementById('election-title-input').value = e.title;
+              document.getElementById('election-desc-input').value = e.description || '';
+              document.getElementById('election-start-input').value = new Date(e.start_date).toISOString().slice(0, 16);
+              document.getElementById('election-end-input').value = new Date(e.end_date).toISOString().slice(0, 16);
+              document.getElementById('election-status-input').value = e.status;
+              document.getElementById('election-modal-title').textContent = 'Modify Election';
+              electionModal.style.display = 'flex';
+            };
+
+            row.querySelector('.delete-el-btn').onclick = async () => {
+              if (confirm(`Delete "${e.title}"? All candidates and votes will be permanently removed.`)) {
+                const res = await apiFetch(`/elections/${e.id}`, { method: 'DELETE' });
+                if (res && res.success) { showToast(res.message, 'success'); loadAdminElections(); }
+                else showToast(res?.message || 'Delete failed', 'error');
+              }
+            };
+
+            tbody.appendChild(row);
+          });
+        } else {
+          showToast(data?.message || 'Failed to load elections', 'error');
+        }
+      };
+
+      // --- Load Manage Candidates list ---
+      const loadAdminCandidates = async () => {
+        const tbody = document.getElementById('admin-candidates-tbody');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:1.5rem;"><div class="spinner" style="margin:0 auto;"></div></td></tr>';
+
+        const [candRes, elRes] = await Promise.all([apiFetch('/candidates'), apiFetch('/elections')]);
+
+        if (!candRes || !candRes.success) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--error);padding:1.5rem;">
+            <i class="bi bi-exclamation-octagon-fill" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;"></i>
+            <strong>Could not load candidates.</strong><br>
+            <small style="color:var(--text-muted);">${candRes?.message || 'Unknown error'}</small>
+          </td></tr>`;
+          return;
+        }
+
+        candidatesList = candRes.candidates;
+        electionsList = elRes?.elections || electionsList;
+        tbody.innerHTML = '';
+
+        if (candidatesList.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">No candidates registered yet.</td></tr>';
+          return;
+        }
+
+        candidatesList.forEach(cand => {
+          const row = document.createElement('tr');
+          const photoHtml = cand.photo
+            ? `<img src="${cand.photo}" alt="${cand.name}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
+            : `<div style="width:40px;height:40px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;">${cand.name.charAt(0)}</div>`;
+          const symbolHtml = cand.symbol
+            ? `<i class="bi ${cand.symbol}" style="font-size:1.2rem;"></i>`
+            : `<i class="bi bi-stars" style="font-size:1.2rem;color:var(--text-muted);"></i>`;
+
+          row.innerHTML = `
+            <td>${photoHtml}</td>
+            <td><strong>${cand.name}</strong></td>
+            <td>${cand.election_title || '—'}</td>
+            <td>${cand.party}</td>
+            <td>${symbolHtml}</td>
+            <td>
+              <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-secondary btn-sm edit-cand-btn"><i class="bi bi-pencil-fill"></i></button>
+                <button class="btn btn-danger btn-sm delete-cand-btn"><i class="bi bi-trash-fill"></i></button>
+              </div>
+            </td>
+          `;
+
+          row.querySelector('.edit-cand-btn').onclick = () => {
+            document.getElementById('candidate-edit-id').value = cand.id;
+            document.getElementById('candidate-name-input').value = cand.name;
+            document.getElementById('candidate-party-input').value = cand.party;
+            document.getElementById('candidate-symbol-input').value = cand.symbol || '';
+            document.getElementById('candidate-photo-input').value = cand.photo || '';
+            loadElectionDropdownOptions('candidate-election-select', cand.election_id);
+            document.getElementById('candidate-modal-title').textContent = 'Modify Candidate Info';
+            candidateModal.style.display = 'flex';
+          };
+
+          row.querySelector('.delete-cand-btn').onclick = async () => {
+            if (confirm(`Remove candidate "${cand.name}" from database?`)) {
+              const res = await apiFetch(`/candidates/${cand.id}`, { method: 'DELETE' });
+              if (res && res.success) { showToast(res.message, 'success'); loadAdminCandidates(); }
+              else showToast(res?.message || 'Delete failed', 'error');
+            }
+          };
+
+          tbody.appendChild(row);
+        });
+      };
+
+      // --- Load Registered Users ---
+      const loadAdminUsers = async () => {
+        const data = await apiFetch('/admin/dashboard');
+        if (data && data.success) {
+          const tbody = document.getElementById('admin-users-tbody');
+          tbody.innerHTML = '';
+          data.users.forEach(u => {
+            const row = document.createElement('tr');
+            const date = new Date(u.created_at).toLocaleDateString();
+            const badge = u.role === 'admin'
+              ? '<span class="badge badge-danger">ADMIN</span>'
+              : '<span class="badge badge-secondary">Voter</span>';
+            row.innerHTML = `<td>${u.id}</td><td><strong>${u.fullname}</strong></td><td>${u.email}</td><td>${u.phone || '—'}</td><td>${badge}</td><td>${date}</td>`;
+            tbody.appendChild(row);
+          });
+        }
+      };
+
+      // --- Load Results List for Admin ---
+      const loadAdminResultsList = async () => {
+        const elSelect = document.getElementById('admin-results-election-select');
+        const elRes = await apiFetch('/elections');
+        if (elRes && elRes.success) {
+          electionsList = elRes.elections;
+          elSelect.innerHTML = '<option value="">-- Choose Election --</option>';
+          elRes.elections.forEach(e => {
+            const opt = document.createElement('option');
+            opt.value = e.id;
+            opt.textContent = e.title;
+            elSelect.appendChild(opt);
+          });
+        }
+      };
+
+      // --- Bind Sidebar Tab Switching ---
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          const tab = item.dataset.tab;
+          document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
+          document.getElementById(`section-${tab}`).classList.add('active');
+
+          if (tab === 'elections') loadAdminElections();
+          else if (tab === 'candidates') loadAdminCandidates();
+          else if (tab === 'users') loadAdminUsers();
+          else if (tab === 'results') loadAdminResultsList();
+          else if (tab === 'overview') refreshAdminStats();
+        });
+      });
+
+      // --- Modals Setup ---
+      const electionModal = document.getElementById('election-modal');
+      const candidateModal = document.getElementById('candidate-modal');
+
+      document.getElementById('election-modal-close-x').onclick = () => electionModal.style.display = 'none';
+      document.getElementById('election-modal-cancel').onclick = () => electionModal.style.display = 'none';
+      document.getElementById('candidate-modal-close-x').onclick = () => candidateModal.style.display = 'none';
+      document.getElementById('candidate-modal-cancel').onclick = () => candidateModal.style.display = 'none';
+
+      document.getElementById('open-add-election-modal').onclick = () => {
+        document.getElementById('election-form').reset();
+        document.getElementById('election-edit-id').value = '';
+        document.getElementById('election-modal-title').textContent = 'Create Election';
+        document.getElementById('election-status-input').value = 'upcoming';
+        electionModal.style.display = 'flex';
+      };
+
+      document.getElementById('open-add-candidate-modal').onclick = () => {
+        document.getElementById('candidate-form').reset();
+        document.getElementById('candidate-edit-id').value = '';
+        document.getElementById('candidate-modal-title').textContent = 'Register Candidate';
+        loadElectionDropdownOptions('candidate-election-select');
+        candidateModal.style.display = 'flex';
+      };
+
+      window.onclick = (e) => {
+        if (e.target === electionModal) electionModal.style.display = 'none';
+        if (e.target === candidateModal) candidateModal.style.display = 'none';
+      };
+
+      // Handle Election Form Submit (Add/Edit)
+      document.getElementById('election-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('election-edit-id').value;
+        const payload = {
+          title: document.getElementById('election-title-input').value,
+          description: document.getElementById('election-desc-input').value,
+          start_date: document.getElementById('election-start-input').value,
+          end_date: document.getElementById('election-end-input').value,
+          status: document.getElementById('election-status-input').value
+        };
+        const res = await apiFetch(id ? `/elections/${id}` : '/elections', {
+          method: id ? 'PUT' : 'POST',
+          body: JSON.stringify(payload)
+        });
+        if (res && res.success) { showToast(res.message, 'success'); electionModal.style.display = 'none'; loadAdminElections(); }
+        else showToast(res?.message || 'Failed to save election', 'error');
+      };
+
+      // Handle Candidate Form Submit (Add/Edit)
+      document.getElementById('candidate-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('candidate-edit-id').value;
+        const payload = {
+          election_id: parseInt(document.getElementById('candidate-election-select').value, 10),
+          name: document.getElementById('candidate-name-input').value,
+          party: document.getElementById('candidate-party-input').value,
+          symbol: document.getElementById('candidate-symbol-input').value,
+          photo: document.getElementById('candidate-photo-input').value
+        };
+        const res = await apiFetch(id ? `/candidates/${id}` : '/candidates', {
+          method: id ? 'PUT' : 'POST',
+          body: JSON.stringify(payload)
+        });
+        if (res && res.success) { showToast(res.message, 'success'); candidateModal.style.display = 'none'; loadAdminCandidates(); }
+        else showToast(res?.message || 'Failed to save candidate', 'error');
+      };
+
+      // Bind results election select
+      document.getElementById('admin-results-election-select').addEventListener('change', async function() {
+        const eid = this.value;
+        const display = document.getElementById('admin-results-display');
+        if (!eid) { display.style.display = 'none'; return; }
+        const res = await apiFetch(`/results?election_id=${eid}`);
+        display.style.display = 'block';
+        if (res && res.success && res.results.length > 0) {
+          const total = res.results.reduce((s, c) => s + c.vote_count, 0);
+          display.innerHTML = res.results.map((c, i) => {
+            const pct = total > 0 ? Math.round((c.vote_count / total) * 100) : 0;
+            return `
+              <div style="margin-bottom:1.25rem;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.35rem;">
+                  <strong>#${i+1} ${c.name} <span style="font-weight:400;color:var(--text-muted);">(${c.party})</span></strong>
+                  <span>${c.vote_count} vote${c.vote_count !== 1 ? 's' : ''} — ${pct}%</span>
+                </div>
+                <div style="background:var(--bg-tertiary);border-radius:999px;height:10px;">
+                  <div style="background:var(--primary);width:${pct}%;height:100%;border-radius:999px;transition:width 0.5s;"></div>
+                </div>
+              </div>`;
+          }).join('');
+        } else {
+          display.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No votes recorded for this election yet.</p>';
+        }
+      });
+
+      // --- Load overview stats on admin init (AFTER all consts are defined) ---
+      refreshAdminStats();
+    }
+  </script>
+</body>
+</html>

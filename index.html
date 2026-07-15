@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectVote - Secure Online Voting System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Style sheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shield-check-fill"></i> ElectVote
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item ms-2"> 
+                        <button class="theme-toggle-btn btn" id="theme-toggle" aria-label="Toggle Theme">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="btn btn-outline-custom" href="login.html">Voter Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-gradient text-white" href="register.html">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient d-flex align-items-center min-vh-100">
+        <div class="container text-center text-lg-start pt-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 animate-fade-in">
+                    <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill mb-3 font-semibold">
+                        <i class="bi bi-activity"></i> Live Student Council General Election 2026
+                    </span>
+                    <h1 class="display-3 fw-black lh-sm mb-4">
+                        Your Voice. <br>
+                        Your Vote. <br>
+                        <span class="text-primary">Your Future.</span>
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Participate in the democratic process of your university safely, transparently, and securely from anywhere. Shape the tomorrow of your campus today.
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                        <a href="login.html" class="btn btn-gradient btn-lg text-white py-3 px-4 shadow">
+                            Cast Your Vote Now <i class="bi bi-arrow-right-short ms-1"></i>
+                        </a>
+                        <a href="results.html" class="btn btn-outline-custom btn-lg py-3 px-4">
+                            <i class="bi bi-bar-chart-fill me-2"></i> View Election Results
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center animate-float">
+                    <img src="https://img.freepik.com/free-vector/voters-casting-ballots-into-box-isolated-flat-vector-illustration-cartoon-people-voting-polling-station-during-election-democracy-referendum-concept_74855-10148.jpg" alt="Voter Illustration" class="img-fluid rounded-lg shadow-lg border" style="max-height: 400px; border-radius: var(--radius-lg);">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Statistics Section -->
+    <section class="py-5 bg-card border-top border-bottom" id="stats">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <h2 class="display-5 fw-bold text-primary">4,280+</h2>
+                    <p class="text-muted mb-0">Registered Voters</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h2 class="display-5 fw-bold text-primary">1,847</h2>
+                    <p class="text-muted mb-0">Votes Cast Today</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h2 class="display-5 fw-bold text-primary">99.9%</h2>
+                    <p class="text-muted mb-0">Security Encryption</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h2 class="display-5 fw-bold text-primary">43%</h2>
+                    <p class="text-muted mb-0">Voter Turnout Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-5" id="about">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <img src="https://img.freepik.com/free-vector/electronic-voting-concept-illustration_114360-5883.jpg" alt="About Voting" class="img-fluid rounded-lg shadow-md" style="border-radius: var(--radius-lg);">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="fw-bold text-primary mb-3">About ElectVote Platform</h2>
+                    <p class="lead text-muted mb-4">
+                        ElectVote is a state-of-the-art secure online voting portal built explicitly for academic representation, student councils, and department representatives.
+                    </p>
+                    <p class="text-muted mb-4">
+                        Our platform eliminates paper ballots, long queues, and physical polling booths while upholding the absolute confidentiality of every voter. Every voter registration goes through verification steps, and vote logs are encrypted to ensure complete reliability.
+                    </p>
+                    <a href="#how-it-works" class="btn btn-outline-custom">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-light-section" id="features" style="background-color: var(--primary-light);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary text-white px-3 py-2 rounded-pill mb-2">Core Features</span>
+                <h2 class="fw-bold">Designed For Transparency and Trust</h2>
+                <p class="text-muted max-width-md mx-auto">Our platform guarantees a fair, private, and authenticated election experience.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card-premium h-100 text-center">
+                        <div class="fs-1 text-primary mb-3"><i class="bi bi-shield-lock-fill"></i></div>
+                        <h4 class="fw-bold mb-2">End-to-End Encryption</h4>
+                        <p class="text-muted mb-0">Every ballot cast is cryptographically processed to ensure that votes cannot be altered or traceably linked to individuals.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 text-center">
+                        <div class="fs-1 text-primary mb-3"><i class="bi bi-fingerprint"></i></div>
+                        <h4 class="fw-bold mb-2">Verified Registrations</h4>
+                        <p class="text-muted mb-0">Automatic validation checks ensure that only eligible voters with valid Student and Voter ID credentials can access ballots.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 text-center">
+                        <div class="fs-1 text-primary mb-3"><i class="bi bi-bar-chart-fill"></i></div>
+                        <h4 class="fw-bold mb-2">Real-Time Data Charts</h4>
+                        <p class="text-muted mb-0">Watch election analytics and final voter turnout metrics change on the fly with responsive charts built using Chart.js.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-5" id="how-it-works">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary text-white px-3 py-2 rounded-pill mb-2">Workflow</span>
+                <h2 class="fw-bold">How It Works</h2>
+                <p class="text-muted">Cast your ballot in three simple steps</p>
+            </div>
+            <div class="row text-center g-4">
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <div class="bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; font-size: 1.5rem; font-weight: 700;">1</div>
+                        <h4 class="fw-bold mb-2">Register & Verify</h4>
+                        <p class="text-muted">Fill out the registration form with your Student/Voter details and upload your profile picture for review.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <div class="bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; font-size: 1.5rem; font-weight: 700;">2</div>
+                        <h4 class="fw-bold mb-2">Select Election</h4>
+                        <p class="text-muted">Browse active elections, view candidate profiles, read manifestos, and evaluate campaign promises.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <div class="bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px; font-size: 1.5rem; font-weight: 700;">3</div>
+                        <h4 class="fw-bold mb-2">Securely Vote</h4>
+                        <p class="text-muted">Make your choice, verify details on the confirmation workspace, and cast your encrypted ballot instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-5 bg-card border-top" id="contact">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary text-white px-3 py-2 rounded-pill mb-2">Inquiries</span>
+                <h2 class="fw-bold">Contact Election Board</h2>
+                <p class="text-muted">Need help with registration? Drop us a query.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card-premium">
+                        <form class="needs-validation" novalidate id="contact-form">
+                            <div class="mb-3">
+                                <label for="contact-name" class="form-label font-semibold">Full Name</label>
+                                <input type="text" class="form-control" id="contact-name" placeholder="John Doe" required>
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact-email" class="form-label font-semibold">Email Address</label>
+                                <input type="email" class="form-control" id="contact-email" placeholder="john@university.edu" required>
+                                <div class="invalid-feedback">Please enter a valid university email.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact-message" class="form-label font-semibold">Your Message</label>
+                                <textarea class="form-control" id="contact-message" rows="4" placeholder="How can we assist you?" required></textarea>
+                                <div class="invalid-feedback">Please type a message.</div>
+                            </div>
+                            <button type="submit" class="btn btn-gradient w-100 text-white py-2.5">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <h5 class="mb-3 text-white"><i class="bi bi-shield-check-fill text-primary"></i> ElectVote</h5>
+                    <p class="text-muted small">
+                        ElectVote is a premium web portal enabling secure, decentralized, and transparent democratic voting for university students.
+                    </p>
+                </div>
+                <div class="col-md-4 col-lg-2 ms-lg-auto">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#features">Platform Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#stats">Election Statistics</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <h5 class="mb-3">Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="login.html">Voter Login</a></li>
+                        <li><a href="register.html">Create Account</a></li>
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="#contact">Contact Board</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-muted">
+                <p class="mb-0">© 2026 ElectVote Student council. All rights reserved.</p>
+                <div class="d-flex gap-3 mt-2 mt-md-0">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            const form = e.target;
+            if (form.checkValidity()) {
+                e.preventDefault();
+                showToast('Thank you! Your message has been sent to the Election board.', 'success');
+                form.reset();
+                form.classList.remove('was-validated');
+            }
+        });
+    </script>
+</body>
+</html>

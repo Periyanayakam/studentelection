@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backend Connection Check</title>
+</head>
+<body>
+  <h1>Checking backend connection</h1>
+  <button onclick="checkConnection()">Test</button>
+  <pre id="output"></pre>
+  <script>
+    async function checkConnection() {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('output').textContent = error.message;
+      }
+    }
+  </script>
+</body>
+</html>

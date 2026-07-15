@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Election Results - ElectVote</title>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Rendered dynamically by app.js -->
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 110px; padding-bottom: 60px;">
+    <div class="results-container">
+      <a href="dashboard.html" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
+        <i class="bi bi-arrow-left"></i> Back to Dashboard
+      </a>
+
+      <div class="voting-header">
+        <h1 id="election-title">Loading Results...</h1>
+        <p id="election-status-badge" class="badge" style="margin-top: 0.5rem; text-transform: uppercase; font-size: 0.85rem;">Status</p>
+        <p id="election-desc" style="margin-top: 1rem; color: var(--text-secondary);">Election description loading...</p>
+      </div>
+
+      <!-- Winner Box (Appears when completed) -->
+      <div id="winner-banner-container" style="display:none;position:relative;">
+        <div class="winner-card" id="winner-banner">
+          <i class="bi bi-award-fill winner-crown" style="color:var(--warning)"></i>
+          <h2 style="margin-bottom:0.5rem;font-size:2rem;color:var(--primary);">Election Winner!</h2>
+          <p id="winner-text" style="font-size:1.1rem;color:var(--text-secondary);"></p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 2rem; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1.1rem; color: var(--text-secondary);"><i class="bi bi-envelope-paper-fill"></i> Total Ballots Cast</h3>
+        <h2 id="total-votes-count" style="font-size: 2.25rem; color: var(--primary);">0</h2>
+      </div>
+
+      <div class="spinner" id="results-spinner"></div>
+
+      <!-- Results Chart Grid -->
+      <div class="card" id="results-card" style="display: none;">
+        <h3 style="margin-bottom: 2rem;"><i class="bi bi-bar-chart-fill"></i> Candidates Performance</h3>
+        <div id="candidates-results-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { apiFetch, getToken, showToast, renderNavbar, launchConfetti } from './js/app.js';
+
+    if (!getToken()) {
+      window.location.href = 'login.html';
+    }
+
+    renderNavbar();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const electionId = urlParams.get('election_id');
+
+    if (!electionId) {
+      showToast('No election specified', 'error');
+      setTimeout(() => window.location.href = 'dashboard.html', 1500);
+    }
+
+    const loadResults = async () => {
+      try {
+        const data = await apiFetch(`/results?election_id=${electionId}`);
+        document.getElementById('results-spinner').style.display = 'none';
+
+        if (data && data.success) {
+          const { election, totalVotes, results } = data;
+          
+          document.getElementById('election-title').textContent = election.title;
+          document.getElementById('election-desc').textContent = election.description || 'No description provided.';
+          document.getElementById('total-votes-count').textContent = totalVotes.toLocaleString();
+
+          // Set Status Badge
+          const badge = document.getElementById('election-status-badge');
+          badge.textContent = election.status;
+          badge.className = 'badge'; // Reset
+          if (election.status === 'active') badge.classList.add('badge-success');
+          else if (election.status === 'completed') badge.classList.add('badge-primary');
+          else badge.classList.add('badge-warning');
+
+          const listContainer = document.getElementById('candidates-results-list');
+          listContainer.innerHTML = '';
+
+          if (results.length === 0) {
+            listContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No candidates are registered in this election.</p>';
+            document.getElementById('results-card').style.display = 'block';
+            return;
+          }
+
+          results.forEach(cand => {
+            const item = document.createElement('div');
+            item.className = 'result-candidate-item';
+            
+            item.innerHTML = `
+              <div class="result-candidate-details">
+                <div class="result-candidate-name">
+                  <h4>${cand.name}</h4>
+                  <p>${cand.party}</p>
+                </div>
+                <div class="result-vote-info">
+                  <span class="result-percentage">${cand.percentage}%</span>
+                  <div class="result-vote-count">${cand.vote_count} votes</div>
+                </div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" data-pct="${cand.percentage}"></div>
+              </div>
+            `;
+            
+            listContainer.appendChild(item);
+          });
+
+          document.getElementById('results-card').style.display = 'block';
+
+          // Trigger Progress Bar animations
+          setTimeout(() => {
+            document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+              const pct = bar.getAttribute('data-pct');
+              bar.style.width = `${pct}%`;
+            });
+          }, 100);
+
+          // Render Winner Section if Completed
+          if (election.status === 'completed' && results.length > 0 && totalVotes > 0) {
+            const winner = results[0]; // Sorted by vote_count DESC in controller
+            document.getElementById('winner-text').innerHTML = `
+              <strong>${winner.name}</strong> of <strong>${winner.party}</strong> won the election with 
+              <strong>${winner.vote_count} votes</strong> (${winner.percentage}% of all casted ballots).
+            `;
+            document.getElementById('winner-banner-container').style.display = 'block';
+            setTimeout(() => {
+              launchConfetti(document.getElementById('winner-banner-container'));
+            }, 300);
+          }
+        }
+      } catch (err) {
+        document.getElementById('results-spinner').style.display = 'none';
+        showToast('Error loading results', 'error');
+      }
+    };
+
+    loadResults();
+  </script>
+</body>
+</html>

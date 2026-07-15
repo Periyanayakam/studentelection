@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectVote - Secure Online Voting System</title>
+  <!-- Bootstrap Icons for style compatibility -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Rendered dynamically by app.js -->
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <span class="badge badge-primary" style="margin-bottom: 1rem;">
+          <i class="bi bi-shield-lock-fill"></i> Cryptographically Secure & Transparent
+        </span>
+        <h1>Shape Your Tomorrow <br><span>With Your Vote.</span></h1>
+        <p>Participate in democratic decision-making from anywhere in the world. ElectVote provides a fast, secure, and intuitive online polling system where every vote is counted transparently.</p>
+        <div class="hero-buttons">
+          <a href="login.html" class="btn btn-primary btn-lg">Cast Your Vote <i class="bi bi-arrow-right"></i></a>
+          <a href="login.html" class="btn btn-secondary btn-lg">View Results <i class="bi bi-bar-chart-fill"></i></a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <svg viewBox="0 0 400 350" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto; filter: drop-shadow(0 20px 40px rgba(79,70,229,0.15));">
+          <!-- Ballot Box -->
+          <rect x="100" y="120" width="200" height="180" rx="16" fill="var(--primary)" opacity="0.9"/>
+          <rect x="100" y="120" width="200" height="50" rx="16" fill="var(--primary-hover)"/>
+          <rect x="175" y="135" width="50" height="8" rx="4" fill="rgba(255,255,255,0.6)"/>
+          <!-- Ballot Paper (animated) -->
+          <g class="ballot-animation" style="animation: float 3s ease-in-out infinite;">
+            <rect x="160" y="60" width="80" height="100" rx="6" fill="#ffffff" stroke="var(--border-color)" stroke-width="2"/>
+            <rect x="175" y="78" width="50" height="5" rx="2" fill="var(--primary)" opacity="0.4"/>
+            <rect x="175" y="90" width="40" height="5" rx="2" fill="var(--primary)" opacity="0.3"/>
+            <rect x="175" y="102" width="45" height="5" rx="2" fill="var(--primary)" opacity="0.2"/>
+            <!-- Checkmark -->
+            <circle cx="172" cy="80" r="6" fill="none" stroke="var(--success)" stroke-width="2"/>
+            <path d="M169 80 L171 82.5 L176 77" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <!-- Shield Icon -->
+          <path d="M200 240 C200 240 170 250 170 275 C170 300 200 315 200 315 C200 315 230 300 230 275 C230 250 200 240 200 240Z" fill="rgba(255,255,255,0.2)"/>
+          <path d="M193 275 L198 280 L210 268" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Decorative dots -->
+          <circle cx="70" cy="180" r="6" fill="var(--secondary)" opacity="0.3"/>
+          <circle cx="340" cy="150" r="8" fill="var(--primary)" opacity="0.2"/>
+          <circle cx="320" cy="280" r="5" fill="var(--success)" opacity="0.3"/>
+          <circle cx="80" cy="260" r="4" fill="var(--warning)" opacity="0.3"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Banner Section -->
+  <section class="stats">
+    <div class="container stats-grid">
+      <div class="stat-card">
+        <h3>100%</h3>
+        <p>Tamper Proof</p>
+      </div>
+      <div class="stat-card">
+        <h3>0</h3>
+        <p>Paper Wasted</p>
+      </div>
+      <div class="stat-card">
+        <h3>Instant</h3>
+        <p>Result Processing</p>
+      </div>
+      <div class="stat-card">
+        <h3>Anywhere</h3>
+        <p>Voter Accessibility</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Header Init Script -->
+  <script type="module">
+    import { renderNavbar } from './js/app.js';
+    renderNavbar();
+  </script>
+</body>
+</html>
